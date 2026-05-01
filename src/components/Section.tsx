@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { CornerMarks } from './CornerMarks';
+import { EyebrowMark } from './EyebrowMark';
 
 type Props = {
   id: string;
@@ -21,6 +22,7 @@ export function Section({ id, eyebrow, title, children, className = '' }: Props)
           <header className="mb-8 md:mb-12" data-reveal>
             {eyebrow && (
               <div className="mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
+                <EyebrowMark />
                 {eyebrow}
               </div>
             )}

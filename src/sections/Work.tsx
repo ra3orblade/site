@@ -1,5 +1,6 @@
 import { Section } from '../components/Section';
 import { KnowledgeGraph } from '../components/KnowledgeGraph';
+import { EyebrowMark } from '../components/EyebrowMark';
 import { selectedWork } from '../data/cv';
 
 export function Work() {
@@ -9,6 +10,7 @@ export function Work() {
         <KnowledgeGraph />
         <header className="overlay-text pointer-events-none absolute inset-x-0 bottom-0 z-10 p-2 md:p-4">
           <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
+            <EyebrowMark />
             Selected work
           </div>
           <h2 className="text-4xl font-medium leading-[1.05] tracking-tight text-paper md:text-6xl lg:text-7xl">

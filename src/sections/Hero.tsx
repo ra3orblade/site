@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { profile } from '../data/cv';
 import { CornerMarks } from '../components/CornerMarks';
+import { EyebrowMark } from '../components/EyebrowMark';
+import { HeroAccent } from '../components/HeroAccent';
 
 const Scene = lazy(() => import('../three/Scene'));
 
@@ -19,12 +21,13 @@ export function Hero() {
 
       <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-20 md:px-12 md:pb-28 lg:px-20">
         <div className="mx-auto w-full max-w-4xl">
-          <p
-            className="mb-6 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1"
-            data-parallax="0.18"
-          >
-            {profile.location}
-          </p>
+          <div className="mb-6 flex items-center justify-between" data-parallax="0.18">
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
+              <EyebrowMark />
+              {profile.location}
+            </p>
+            <HeroAccent />
+          </div>
           <h1
             className="text-5xl font-medium leading-[0.9] text-paper md:text-7xl lg:text-[9rem]"
             style={{ letterSpacing: 'var(--tracking-hero)' }}

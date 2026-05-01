@@ -1,5 +1,6 @@
 import { profile } from '../data/cv';
 import { CornerMarks } from '../components/CornerMarks';
+import { EyebrowMark } from '../components/EyebrowMark';
 
 function MailIcon() {
   return (
@@ -34,6 +35,7 @@ export function Contact() {
       <CornerMarks />
       <div className="mx-auto w-full max-w-4xl">
         <div className="mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
+          <EyebrowMark />
           Contact
         </div>
 

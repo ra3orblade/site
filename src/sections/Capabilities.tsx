@@ -1,6 +1,11 @@
+import { CapabilityIcon } from '../components/CapabilityIcon';
 import { CornerMarks } from '../components/CornerMarks';
 import { CubicScene } from '../components/CubicScene';
+import { Divider } from '../components/Divider';
+import { EyebrowMark } from '../components/EyebrowMark';
 import { aiPractice, capabilities, stack } from '../data/cv';
+
+const CAPABILITY_ICONS = ['architecture', 'data', 'platform'] as const;
 
 export function Capabilities() {
   return (
@@ -12,6 +17,7 @@ export function Capabilities() {
       <div className="mx-auto w-full max-w-4xl">
         <header className="mb-8 md:mb-12" data-reveal>
           <div className="mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
+            <EyebrowMark />
             How I work
           </div>
           <h2 className="text-4xl font-medium leading-[1.05] tracking-tight text-paper md:text-6xl lg:text-7xl">
@@ -36,6 +42,7 @@ export function Capabilities() {
 
         <article className="mt-10 border-y hairline py-10 md:mt-12 md:py-12" data-reveal>
           <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
+            <EyebrowMark />
             {aiPractice.eyebrow}
           </div>
           <h3
@@ -56,8 +63,11 @@ export function Capabilities() {
           <CubicScene />
         </div>
 
+        <Divider className="mt-10 md:mt-12" />
+
         <div className="mt-10 md:mt-12">
           <div className="mb-6 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
+            <EyebrowMark />
             Where I go deep
           </div>
           <div className="grid gap-px bg-white/10 md:grid-cols-3">
@@ -68,10 +78,13 @@ export function Capabilities() {
                 data-reveal
                 style={{ ['--reveal-delay' as string]: `${i * 60}ms` }}
               >
-                <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
-                  0{i + 1}
+                <div className="flex items-start justify-between">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
+                    0{i + 1}
+                  </div>
+                  <CapabilityIcon variant={CAPABILITY_ICONS[i] ?? 'architecture'} />
                 </div>
-                <h4 className="mt-4 text-xl font-medium tracking-tight text-paper md:text-2xl">
+                <h4 className="mt-6 text-xl font-medium tracking-tight text-paper md:text-2xl">
                   {c.title}
                 </h4>
                 <p className="mt-4 leading-relaxed text-fog-3">{c.body}</p>
@@ -80,8 +93,11 @@ export function Capabilities() {
           </div>
         </div>
 
+        <Divider className="mt-10 md:mt-12" />
+
         <div className="mt-10 md:mt-12">
           <div className="mb-6 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
+            <EyebrowMark />
             Day-to-day stack
           </div>
           <p className="max-w-4xl text-lg leading-relaxed text-fog-2 md:text-xl">
