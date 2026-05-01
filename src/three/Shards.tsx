@@ -3,20 +3,22 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { getHeroDim } from './scroll';
 
-const COUNT = 60;
+const COUNT_DESKTOP = 60;
+const COUNT_MOBILE = 22;
 
 /**
  * Small instanced shards orbiting the central form. They share lighting,
  * so they catch the same key/rim and reinforce the depth.
  */
-export function Shards() {
+export function Shards({ mobile = false }: { mobile?: boolean }) {
   const ref = useRef<THREE.InstancedMesh>(null);
   const matRef = useRef<THREE.MeshStandardMaterial>(null);
+  const count = mobile ? COUNT_MOBILE : COUNT_DESKTOP;
 
   const { matrices, seeds } = useMemo(() => {
     const ms: THREE.Matrix4[] = [];
     const sd: Array<{ orbit: number; phase: number; tilt: number; rate: number; size: number }> = [];
-    for (let i = 0; i < COUNT; i++) {
+    for (let i = 0; i < count; i++) {
       ms.push(new THREE.Matrix4());
       sd.push({
         orbit: 1.7 + Math.random() * 1.4,
@@ -27,7 +29,7 @@ export function Shards() {
       });
     }
     return { matrices: ms, seeds: sd };
-  }, []);
+  }, [count]);
 
   const tmp = useMemo(
     () => ({
@@ -47,7 +49,7 @@ export function Shards() {
     const drift = 1 + dim * 1.6;
     const sizeFactor = 1 - dim * 0.7;
 
-    for (let i = 0; i < COUNT; i++) {
+    for (let i = 0; i < count; i++) {
       const s = seeds[i];
       const angle = s.phase + t * s.rate;
       tmp.pos.set(
@@ -70,7 +72,12 @@ export function Shards() {
   });
 
   return (
-    <instancedMesh ref={ref} args={[undefined, undefined, COUNT]} castShadow receiveShadow>
+    <instancedMesh
+      ref={ref}
+      args={[undefined, undefined, count]}
+      castShadow={!mobile}
+      receiveShadow={!mobile}
+    >
       <tetrahedronGeometry args={[1, 0]} />
       <meshStandardMaterial ref={matRef} color="#ffffff" roughness={0.4} metalness={0.1} flatShading />
     </instancedMesh>
