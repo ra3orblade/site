@@ -4,8 +4,6 @@ import { Work } from './sections/Work';
 import { Capabilities } from './sections/Capabilities';
 import { Companies } from './sections/Companies';
 import { Contact } from './sections/Contact';
-import { Cursor } from './components/Cursor';
-import { RevealRoot } from './components/Reveal';
 import { ParallaxRoot } from './components/Parallax';
 
 export default function App() {
@@ -17,8 +15,6 @@ export default function App() {
       <Capabilities />
       <Companies />
       <Contact />
-      <Cursor />
-      <RevealRoot />
       <ParallaxRoot />
     </main>
   );

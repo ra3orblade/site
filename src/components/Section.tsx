@@ -12,11 +12,11 @@ export function Section({ id, eyebrow, title, children, className = '' }: Props)
   return (
     <section
       id={id}
-      className={`relative px-6 py-32 md:px-12 md:py-44 lg:px-20 lg:py-56 ${className}`}
+      className={`relative px-6 py-10 md:px-12 md:py-6 lg:px-20 lg:py-6 ${className}`}
     >
-      <div className="mx-auto w-full max-w-6xl">
+      <div className="mx-auto w-full max-w-4xl">
         {(eyebrow || title) && (
-          <header className="mb-16 md:mb-24" data-reveal>
+          <header className="mb-8 md:mb-12" data-reveal>
             {eyebrow && (
               <div className="mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
                 {eyebrow}

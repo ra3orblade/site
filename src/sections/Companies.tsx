@@ -10,7 +10,7 @@ export function Companies() {
             key={e.company}
             className="grid grid-cols-[40px_1fr] items-baseline gap-x-6 gap-y-2 border-b hairline py-8 md:grid-cols-[60px_1fr_auto] md:gap-x-12 md:py-10"
             data-reveal
-            style={{ ['--reveal-delay' as string]: `${i * 70}ms` }}
+            style={{ ['--reveal-delay' as string]: `${Math.min(i, 4) * 50}ms` }}
           >
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
               0{i + 1}

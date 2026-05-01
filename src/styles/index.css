@@ -35,6 +35,12 @@ body {
   color: #000;
 }
 
+/* Subtle text-shadow for legibility over photo / canvas overlays. */
+.overlay-text,
+.overlay-text * {
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.55);
+}
+
 .grain::after {
   content: '';
   position: fixed;
@@ -66,63 +72,7 @@ body {
   font-weight: 400;
 }
 
-/* Scroll-triggered reveal: applied via global IntersectionObserver in App.tsx. */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(14px);
-  transition:
-    opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
-}
-[data-reveal][data-reveal-visible='true'] {
-  opacity: 1;
-  transform: none;
-}
-
-/* Custom cursor (hover-capable pointers only). */
-@media (hover: hover) and (pointer: fine) {
-  html,
-  body,
-  a,
-  button {
-    cursor: none;
-  }
-  .cursor-dot,
-  .cursor-ring {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 100;
-    border-radius: 9999px;
-    will-change: transform;
-  }
-  .cursor-dot {
-    width: 5px;
-    height: 5px;
-    background: #f5f5f5;
-    transition: opacity 0.2s, transform 0.05s linear;
-  }
-  .cursor-ring {
-    width: 36px;
-    height: 36px;
-    border: 1px solid rgba(245, 245, 245, 0.45);
-    transition:
-      width 0.25s ease,
-      height 0.25s ease,
-      border-color 0.25s ease,
-      background-color 0.25s ease,
-      opacity 0.2s ease;
-  }
-  .cursor-ring[data-hover='true'] {
-    width: 60px;
-    height: 60px;
-    border-color: rgba(245, 245, 245, 0.85);
-    background-color: rgba(245, 245, 245, 0.05);
-  }
-}
+/* Scroll-triggered reveal removed; data-reveal attributes are no-ops now. */
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -134,9 +84,5 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-  [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
   }
 }

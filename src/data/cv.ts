@@ -2,6 +2,7 @@ export const profile = {
   name: 'Andrew Simachev',
   title: 'Senior Front-End Engineer & Architect',
   location: 'Berlin',
+  email: 'razor@anytype.io',
   github: 'https://github.com/ra3orblade',
   linkedin: 'https://linkedin.com/in/ra3orblade',
   summary:
@@ -79,21 +80,45 @@ export type WorkEntry = {
 
 export const selectedWork: WorkEntry[] = [
   {
-    title: 'Knowledge graph — anytype-ts',
+    title: 'Anytype desktop client',
     blurb:
-      'Interactive D3 force-directed knowledge graph at the heart of Anytype. Custom layout engine with reactive MobX stores and optimistic updates streamed over gRPC.',
+      'Founding front-end engineer. Built the client from scratch — open source, local-first, cross-platform across macOS, Windows and Linux. The features below are part of it.',
     context: 'Anytype, 2021 — present',
   },
   {
-    title: 'AI-driven legacy migrations',
+    title: 'Block-based editor',
     blurb:
-      'Series of large automated migrations on the public client through Claude Code: jQuery removal, DOM utility unification, full MobX-React-Lite conversion, rspack → Vite + Bun. Each framed as a spec the model executed against, not a sequence of hand-written edits.',
+      'Rich-text editor with twenty-plus block types — text, headings, lists, tables, code, embeds, callouts, toggles, files, columns. Drag-and-drop reordering, slash commands, keyboard-first navigation.',
+    context: 'Anytype, 2021 — present',
+  },
+  {
+    title: 'Relational database UI',
+    blurb:
+      'Database surfaces with seven view types — grid, list, gallery, board, calendar, graph, timeline. Filters, sorts, grouping, row templates. The same dataset rendered through any view, kept in sync as filters change.',
+    context: 'Anytype, 2021 — present',
+  },
+  {
+    title: 'Interactive knowledge graph',
+    blurb:
+      'Force-directed visualization of every object and relation in a workspace. Custom layout over D3, reactive MobX stores, updates streamed from the local database. Pan, zoom, search, filter.',
+    context: 'Anytype, 2021 — present',
+  },
+  {
+    title: 'Real-time collaborative chat',
+    blurb:
+      'Multi-space messaging built into the same object model as the rest of the app — messages, attachments and mentions are first-class objects. End-to-end on the front-end against a streaming backend.',
     context: 'Anytype, 2024 — 2025',
+  },
+  {
+    title: 'Cross-platform release pipeline',
+    blurb:
+      'Packaging, code signing and notarization for macOS, Windows and Linux across both Electron and Tauri. Auto-update, crash reporting, channels for nightly and stable builds.',
+    context: 'Anytype, 2021 — present',
   },
   {
     title: 'devtodev — platform redesign',
     blurb:
-      'Ground-up redesign of a product-analytics SaaS for game developers. Improved retention and cut support-ticket volume by 40%. Greenplum cluster reduced analytical query times by more than 60%.',
+      'Ground-up redesign of a product-analytics SaaS for game developers. Improved retention and cut support-ticket volume by 40%. A Greenplum cluster I introduced reduced analytical query times by more than 60%.',
     context: 'devtodev, 2018 — 2021',
   },
   {
@@ -110,7 +135,7 @@ export const aiPractice = {
   eyebrow: 'Primary practice',
   title: 'Building with AI agents.',
   body:
-    'Claude Code is my primary development tool. Tasks start as written specs, not prompts. Subagents run in parallel for research, refactoring and review. Custom skills and hooks turn workflows I run weekly into single-command operations. Large-scale migrations — jQuery removal across a codebase, full MobX-React-Lite conversion, a complete build-system swap — are framed as specs the model executes against, not sequences of hand-written edits.',
+    'Claude Code is my primary development tool. Tasks start as written specs, not prompts. Subagents run in parallel for research, refactoring and review. Custom skills and hooks turn workflows I run weekly into single-command operations. Large-scale migrations — full MobX-React-Lite conversion, a complete build-system swap — are framed as specs the model executes against, not sequences of hand-written edits.',
   tail:
     'The way I build now is not the way I built two years ago — and the gap is widening fast.',
 } as const;
@@ -131,19 +156,22 @@ export const capabilities: Capability[] = [
 ];
 
 export const stack = [
-  'React 19',
-  'TypeScript strict',
+  'React',
+  'TypeScript',
   'MobX',
   'Lexical',
-  'Tailwind CSS v4',
-  'Tauri v2 + Rust',
+  'Tailwind',
+  'Tauri',
+  'Rust',
   'Electron',
-  'Vite + Bun',
-  'gRPC · ts-proto',
-  'D3.js',
+  'Vite',
+  'Bun',
+  'gRPC',
+  'D3',
   'PixiJS',
   'WebGL',
-  'Node.js',
-  'PostgreSQL · Greenplum · MongoDB',
+  'Node',
+  'PostgreSQL',
+  'MongoDB',
   'Claude Code',
 ] as const;
