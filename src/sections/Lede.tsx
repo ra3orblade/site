@@ -1,9 +1,12 @@
+import { CornerMarks } from '../components/CornerMarks';
+
 export function Lede() {
   return (
     <section
       id="lede"
       className="relative px-6 py-10 md:px-12 md:py-6 lg:px-20 lg:py-6"
     >
+      <CornerMarks />
       <div className="mx-auto w-full max-w-4xl">
         <p
           className="text-3xl font-medium leading-[1.15] tracking-tight text-paper md:text-5xl lg:text-6xl"

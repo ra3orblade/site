@@ -2,7 +2,7 @@ export const profile = {
   name: 'Andrew Simachev',
   title: 'Senior Front-End Engineer & Architect',
   location: 'Berlin',
-  email: 'razor@anytype.io',
+  email: 'andrew.simachev@gmail.com',
   github: 'https://github.com/ra3orblade',
   linkedin: 'https://linkedin.com/in/ra3orblade',
   summary:

@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { profile } from '../data/cv';
+import { CornerMarks } from '../components/CornerMarks';
 
 const Scene = lazy(() => import('../three/Scene'));
 
@@ -14,8 +15,10 @@ export function Hero() {
 
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/85" />
 
+      <CornerMarks />
+
       <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-20 md:px-12 md:pb-28 lg:px-20">
-        <div className="mx-auto w-full max-w-6xl">
+        <div className="mx-auto w-full max-w-4xl">
           <p
             className="mb-6 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1"
             data-parallax="0.18"

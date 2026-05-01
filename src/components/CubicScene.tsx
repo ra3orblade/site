@@ -119,8 +119,6 @@ type Voxel = {
   size: number;
 };
 
-type Phase = 'scattered' | 'assembling' | 'held' | 'exploding';
-
 function scatterPosition(out: THREE.Vector3) {
   const phi = Math.random() * Math.PI * 2;
   const cosT = 1 - 2 * Math.random();
@@ -129,12 +127,31 @@ function scatterPosition(out: THREE.Vector3) {
   out.set(Math.cos(phi) * sinT * rr, cosT * rr, Math.sin(phi) * sinT * rr);
 }
 
-function FlyingVoxels({ assemble, mobile }: { assemble: boolean; mobile: boolean }) {
+function FlyingVoxels({
+  assemble,
+  scrollRef,
+  mobile,
+}: {
+  assemble: boolean;
+  scrollRef: { current: number };
+  mobile: boolean;
+}) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
-  const tmp = useMemo(() => new THREE.Vector3(), []);
+  const tmpA = useMemo(() => new THREE.Vector3(), []);
+  const tmpB = useMemo(() => new THREE.Vector3(), []);
+  const tmpJitter = useMemo(() => new THREE.Vector3(), []);
   const count = mobile ? 32 : 80;
   const shapes = useMemo(() => makeShapes(count), [count]);
+
+  const slotOrder = useMemo(() => {
+    const order = Array.from({ length: count }, (_, i) => i);
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    return order;
+  }, [count]);
 
   const voxels = useMemo<Voxel[]>(() => {
     const out: Voxel[] = [];
@@ -156,35 +173,20 @@ function FlyingVoxels({ assemble, mobile }: { assemble: boolean; mobile: boolean
     return out;
   }, [count]);
 
+  const scatterTargets = useMemo(() => voxels.map(() => new THREE.Vector3()), [voxels]);
+
   const assembleRef = useRef(assemble);
   useEffect(() => {
     assembleRef.current = assemble;
   }, [assemble]);
   const prevAssembleRef = useRef(assemble);
 
-  const phaseRef = useRef<{ phase: Phase; phaseStart: number; shapeIdx: number }>({
-    phase: 'scattered',
-    phaseStart: 0,
-    shapeIdx: 0,
-  });
-
-  const assignShapeTargets = (idx: number) => {
-    const shape = shapes[idx];
-    const order = Array.from({ length: count }, (_, i) => i);
-    for (let i = order.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [order[i], order[j]] = [order[j], order[i]];
-    }
-    for (let i = 0; i < count; i++) voxels[i].target.copy(shape[order[i]]);
-  };
-
-  const assignExplosionTargets = () => {
+  const reassignScatter = () => {
     for (let i = 0; i < count; i++) {
       const v = voxels[i];
-      const d = v.pos.clone();
-      if (d.lengthSq() < 0.001) {
-        scatterPosition(d);
-      } else {
+      const d = tmpA.copy(v.pos);
+      if (d.lengthSq() < 0.001) scatterPosition(d);
+      else {
         d.normalize();
         d.x += (Math.random() - 0.5) * 0.5;
         d.y += (Math.random() - 0.5) * 0.5;
@@ -192,99 +194,82 @@ function FlyingVoxels({ assemble, mobile }: { assemble: boolean; mobile: boolean
         d.normalize();
         d.multiplyScalar(3.2 + Math.random() * 1.8);
       }
-      v.target.copy(d);
+      scatterTargets[i].copy(d);
     }
   };
 
   useFrame((state, dt) => {
     const t = state.clock.elapsedTime;
 
-    // React to scroll-driven assemble flag changes.
-    if (assembleRef.current !== prevAssembleRef.current) {
-      if (assembleRef.current) {
-        phaseRef.current.phase = 'assembling';
-        phaseRef.current.phaseStart = t;
-        assignShapeTargets(phaseRef.current.shapeIdx);
-      } else {
-        phaseRef.current.phase = 'exploding';
-        phaseRef.current.phaseStart = t;
-        assignExplosionTargets();
-      }
-      prevAssembleRef.current = assembleRef.current;
+    if (!assembleRef.current && prevAssembleRef.current) {
+      reassignScatter();
     }
-
-    // Auto-cycle while assembled.
-    const elapsed = t - phaseRef.current.phaseStart;
-    if (assembleRef.current) {
-      if (phaseRef.current.phase === 'assembling' && elapsed > 2.6) {
-        phaseRef.current.phase = 'held';
-        phaseRef.current.phaseStart = t;
-      } else if (phaseRef.current.phase === 'held' && elapsed > 4.0) {
-        phaseRef.current.phase = 'exploding';
-        phaseRef.current.phaseStart = t;
-        assignExplosionTargets();
-      } else if (phaseRef.current.phase === 'exploding' && elapsed > 1.4) {
-        phaseRef.current.shapeIdx = (phaseRef.current.shapeIdx + 1) % shapes.length;
-        phaseRef.current.phase = 'assembling';
-        phaseRef.current.phaseStart = t;
-        assignShapeTargets(phaseRef.current.shapeIdx);
-      }
-    } else {
-      // Out of view: once explosion settles, mark scattered.
-      if (phaseRef.current.phase === 'exploding' && elapsed > 1.4) {
-        phaseRef.current.phase = 'scattered';
-        phaseRef.current.phaseStart = t;
-      }
-    }
-
-    // Lerp positions toward target with phase-dependent rate.
-    const rate =
-      phaseRef.current.phase === 'exploding'
-        ? 0.075
-        : phaseRef.current.phase === 'assembling'
-          ? 0.06
-          : 0.045;
+    prevAssembleRef.current = assembleRef.current;
 
     if (!meshRef.current) return;
 
-    for (let i = 0; i < count; i++) {
-      const v = voxels[i];
-      v.pos.lerp(v.target, rate);
-      v.rot.x += dt * v.spin.x;
-      v.rot.y += dt * v.spin.y;
-      v.rot.z += dt * v.spin.z;
+    if (assembleRef.current) {
+      // Scroll progress drives shape interpolation. Wraps so the cycle
+      // continues across multiple scrolls past the section.
+      const segments = shapes.length;
+      const f = scrollRef.current * segments;
+      const idx = ((Math.floor(f) % segments) + segments) % segments;
+      const nextIdx = (idx + 1) % segments;
+      let mix = f - Math.floor(f);
+      mix = mix * mix * (3 - 2 * mix);
+      const shapeA = shapes[idx];
+      const shapeB = shapes[nextIdx];
 
-      let breath = 1;
-      if (phaseRef.current.phase === 'held') {
-        breath = 1 + Math.sin(t * 1.2 + i * 0.3) * 0.04;
-      }
+      for (let i = 0; i < count; i++) {
+        const v = voxels[i];
+        const slot = slotOrder[i];
+        tmpA.copy(shapeA[slot]);
+        tmpB.copy(shapeB[slot]);
+        v.target.lerpVectors(tmpA, tmpB, mix);
+        v.pos.lerp(v.target, 0.09);
+        v.rot.x += dt * v.spin.x;
+        v.rot.y += dt * v.spin.y;
+        v.rot.z += dt * v.spin.z;
 
-      dummy.position.copy(v.pos);
-      if (phaseRef.current.phase !== 'held') {
-        tmp.set(
-          Math.sin(t * 3 + i) * 0.014,
-          Math.cos(t * 2.7 + i * 1.3) * 0.014,
-          Math.sin(t * 3.3 + i * 0.7) * 0.014
+        dummy.position.copy(v.pos);
+        tmpJitter.set(
+          Math.sin(t * 3 + i) * 0.01,
+          Math.cos(t * 2.7 + i * 1.3) * 0.01,
+          Math.sin(t * 3.3 + i * 0.7) * 0.01
         );
-        dummy.position.add(tmp);
+        dummy.position.add(tmpJitter);
+        dummy.rotation.copy(v.rot);
+        dummy.scale.setScalar(v.size);
+        dummy.updateMatrix();
+        meshRef.current.setMatrixAt(i, dummy.matrix);
       }
-      dummy.rotation.copy(v.rot);
-      dummy.scale.setScalar(v.size * breath);
-      dummy.updateMatrix();
-      meshRef.current.setMatrixAt(i, dummy.matrix);
+    } else {
+      for (let i = 0; i < count; i++) {
+        const v = voxels[i];
+        v.target.copy(scatterTargets[i]);
+        v.pos.lerp(v.target, 0.075);
+        v.rot.x += dt * v.spin.x * 0.6;
+        v.rot.y += dt * v.spin.y * 0.6;
+        v.rot.z += dt * v.spin.z * 0.6;
+        dummy.position.copy(v.pos);
+        dummy.rotation.copy(v.rot);
+        dummy.scale.setScalar(v.size);
+        dummy.updateMatrix();
+        meshRef.current.setMatrixAt(i, dummy.matrix);
+      }
     }
     meshRef.current.instanceMatrix.needsUpdate = true;
   });
 
   return (
-    <instancedMesh
-      ref={meshRef}
-      args={[undefined, undefined, count]}
-      castShadow={!mobile}
-      receiveShadow={!mobile}
-    >
+    <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="#f0f0f0" roughness={0.4} metalness={0.12} flatShading />
+      <meshStandardMaterial
+        color="#f0f0f0"
+        roughness={0.4}
+        metalness={0.12}
+        flatShading
+      />
     </instancedMesh>
   );
 }
@@ -296,7 +281,7 @@ function CameraOrbit() {
     const a = t * 0.045;
     cam.position.x = Math.sin(a) * 3.6;
     cam.position.z = Math.cos(a) * 3.6;
-    cam.position.y = 1.2 + Math.sin(t * 0.06) * 0.12;
+    cam.position.y = Math.sin(t * 0.06) * 0.08;
     cam.lookAt(0, 0, 0);
   });
   return null;
@@ -304,11 +289,14 @@ function CameraOrbit() {
 
 /**
  * Voxels of varying sizes that gather into a shape on scroll-in and explode
- * outward on scroll-out. While in view they auto-cycle through several
- * shapes (cube, sphere, torus, pyramid, helix) with explosions between.
+ * outward on scroll-out. Scroll position drives continuous shape morphing
+ * (cube ↔ sphere ↔ torus ↔ pyramid ↔ helix). A few voxels light up at any
+ * moment — the lamp role transfers between random voxels every ~0.5–1.3s,
+ * so the light visibly hops through the structure.
  */
 export function CubicScene() {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef(0);
   const [reduced, setReduced] = useState(false);
   const [mobile, setMobile] = useState(false);
   const [dpr, setDpr] = useState(1);
@@ -344,7 +332,6 @@ export function CubicScene() {
             setRunning(true);
           } else {
             setAssemble(false);
-            // Keep frameloop alive briefly so the explosion plays out.
             if (exitTimer) window.clearTimeout(exitTimer);
             exitTimer = window.setTimeout(() => setRunning(false), 2200);
           }
@@ -356,6 +343,36 @@ export function CubicScene() {
     return () => {
       io.disconnect();
       if (exitTimer) window.clearTimeout(exitTimer);
+    };
+  }, [ready]);
+
+  // Track scroll position relative to the section. progress is 0 when the
+  // section is just entering at the bottom of the viewport, 1 when it's
+  // just leaving at the top.
+  useEffect(() => {
+    if (!ready) return;
+    const el = wrapperRef.current;
+    if (!el) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const total = rect.height + vh;
+      const advance = vh - rect.top;
+      scrollRef.current = Math.max(0, Math.min(1, advance / total));
+    };
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, [ready]);
 
@@ -397,45 +414,20 @@ export function CubicScene() {
           powerPreference: mobile ? 'default' : 'high-performance',
         }}
         dpr={dpr}
-        shadows={!mobile}
         camera={{ position: [3.4, 1.2, 2.4], fov: 36 }}
-        onCreated={({ gl, scene }) => {
+        onCreated={({ gl }) => {
           gl.setClearColor('#000000', 1);
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.05;
-          scene.fog = new THREE.Fog('#000000', 6, 14);
         }}
       >
         <CameraOrbit />
 
         <ambientLight intensity={0.04} />
-        <directionalLight
-          position={[4.5, 5.2, 2.3]}
-          intensity={3.0}
-          color="#ffffff"
-          castShadow={!mobile}
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
-          shadow-camera-near={0.5}
-          shadow-camera-far={14}
-          shadow-camera-left={-3}
-          shadow-camera-right={3}
-          shadow-camera-top={3}
-          shadow-camera-bottom={-3}
-          shadow-bias={-0.0005}
-        />
+        <directionalLight position={[4.5, 5.2, 2.3]} intensity={3.0} color="#ffffff" />
         <directionalLight position={[-3, 1.2, -3]} intensity={0.3} color="#ffffff" />
 
-        <FlyingVoxels assemble={assemble} mobile={mobile} />
-
-        <mesh
-          rotation={[-Math.PI / 2, 0, 0]}
-          position={[0, -1.4, 0]}
-          receiveShadow={!mobile}
-        >
-          <planeGeometry args={[14, 14]} />
-          <meshStandardMaterial color="#000000" roughness={1} />
-        </mesh>
+        <FlyingVoxels assemble={assemble} scrollRef={scrollRef} mobile={mobile} />
       </Canvas>
     </div>
   );

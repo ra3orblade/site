@@ -1,4 +1,5 @@
 import { profile } from '../data/cv';
+import { CornerMarks } from '../components/CornerMarks';
 
 function MailIcon() {
   return (
@@ -30,6 +31,7 @@ export function Contact() {
       id="contact"
       className="relative border-t hairline px-6 py-10 md:px-12 md:py-6 lg:px-20 lg:py-6"
     >
+      <CornerMarks />
       <div className="mx-auto w-full max-w-4xl">
         <div className="mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
           Contact
@@ -48,23 +50,23 @@ export function Contact() {
             href={profile.linkedin}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-paper px-5 py-3 text-sm text-black transition hover:bg-bone"
+            className="inline-flex min-w-[160px] items-center justify-center gap-2 rounded-full bg-paper px-6 py-3 text-sm text-black transition hover:bg-bone"
           >
             <LinkedInIcon />
-            Message on LinkedIn
+            LinkedIn
           </a>
           <a
             href={`mailto:${profile.email}`}
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-3 text-sm text-paper transition hover:border-white/40"
+            className="inline-flex min-w-[160px] items-center justify-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm text-paper transition hover:border-white/40"
           >
             <MailIcon />
-            {profile.email}
+            Mail me
           </a>
           <a
             href={profile.github}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-3 text-sm text-paper transition hover:border-white/40"
+            className="inline-flex min-w-[160px] items-center justify-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm text-paper transition hover:border-white/40"
           >
             <GitHubIcon />
             GitHub
