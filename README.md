@@ -3,7 +3,7 @@
 Personal portfolio site. AI-native build — written together with Claude Code,
 shipped without a designer in the loop.
 
-Live: https://ra3orblade.dev (deployed on Vercel from `main`)
+Live: https://razorbladez.vercel.app/ (deployed on Vercel from `main`)
 
 ## Stack
 
