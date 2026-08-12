@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import { Hero } from './sections/Hero';
 import { Lede } from './sections/Lede';
 import { Work } from './sections/Work';
@@ -18,6 +19,7 @@ export default function App() {
       <Companies />
       <Contact />
       <ParallaxRoot />
+      <Analytics />
     </main>
   );
 }
