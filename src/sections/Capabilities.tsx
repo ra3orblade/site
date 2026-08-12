@@ -34,7 +34,7 @@ export function Capabilities() {
           data-reveal
           style={{ ['--reveal-delay' as string]: '120ms' }}
         >
-          <PhotoFrame src="/photo2.png" label="Fig.02" index="Cap" variant="sweep" />
+          <PhotoFrame src="/photo2.jpg" label="Fig.02" index="Cap" variant="sweep" />
         </figure>
 
         <article className="mt-10 border-y hairline py-10 md:mt-12 md:py-12" data-reveal>

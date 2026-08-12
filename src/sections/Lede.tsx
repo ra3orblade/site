@@ -42,7 +42,7 @@ export function Lede() {
           data-reveal
           style={{ ['--reveal-delay' as string]: '240ms' }}
         >
-          <PhotoFrame src="/photo1.png" label="Fig.01" index="Lede" />
+          <PhotoFrame src="/photo1.jpg" label="Fig.01" index="Lede" />
         </figure>
       </div>
     </section>

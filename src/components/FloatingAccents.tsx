@@ -1,5 +1,5 @@
 import { GlitchAccent } from './GlitchAccent';
-import { seedFrom, GLITCH_SHAPES } from './glitch';
+import { hashIndex, GLITCH_SHAPES } from './glitch';
 
 /**
  * Anchor points in the outer gutters, clear of the max-w-4xl reading column.
@@ -38,29 +38,47 @@ const NARROW_SIZES = [18, 20, 24, 28];
  * seeded off the section id so the arrangement is stable across renders;
  * *when* each one flashes is decided at runtime by the shared scheduler.
  */
-export function FloatingAccents({ id }: { id: string }) {
-  const base = seedFrom(id);
+/**
+ * Deal `count` items from a per-key shuffle of `items`.
+ *
+ * Straight hashing gave a section repeats and left some shapes unused
+ * entirely (octagon never came up across all six sections). Dealing from a
+ * deterministic Fisher-Yates shuffle guarantees every slot in a section gets
+ * a different shape while keeping the arrangement stable across renders.
+ */
+function deal<T>(items: T[], key: string, count: number): T[] {
+  const deck = [...items];
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = hashIndex(`${key}/${i}`, i + 1);
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  return Array.from({ length: count }, (_, i) => deck[i % deck.length]);
+}
 
-  const render = (positions: string[], sizes: number[], offset: number) =>
-    positions.map((className, i) => {
-      const n = base + (i + offset) * 37;
-      return (
-        <GlitchAccent
-          key={className}
-          shape={GLITCH_SHAPES[(n * 7 + i * 13) % GLITCH_SHAPES.length]}
-          size={sizes[(n + i * 3) % sizes.length]}
-          className={className}
-        />
-      );
-    });
+export function FloatingAccents({ id }: { id: string }) {
+  /*
+   * Index off a string hash per slot rather than arithmetic on a single seed.
+   * The previous form was `(base + i*37) * 7 + i*13` mod 12, which reduces to
+   * `(7*base + 8i) % 12` — and since gcd(8, 12) = 4 that orbit only ever
+   * visits three shapes, the same three in every section regardless of the
+   * seed. The size index collapsed harder still: `(base + 40i) % 5` with
+   * 40 ≡ 0 (mod 5) gave every accent in a section an identical size.
+   */
+  const render = (positions: string[], sizes: number[], salt: string) => {
+    const shapes = deal(GLITCH_SHAPES, `${id}${salt}shape`, positions.length);
+    const dealtSizes = deal(sizes, `${id}${salt}size`, positions.length);
+    return positions.map((className, i) => (
+      <GlitchAccent key={className} shape={shapes[i]} size={dealtSizes[i]} className={className} />
+    ));
+  };
 
   return (
     <>
       <div className="pointer-events-none absolute inset-0 z-0 hidden lg:block" aria-hidden>
-        {render(WIDE_POSITIONS, WIDE_SIZES, 0)}
+        {render(WIDE_POSITIONS, WIDE_SIZES, ':wide:')}
       </div>
       <div className="pointer-events-none absolute inset-0 z-0 lg:hidden" aria-hidden>
-        {render(NARROW_POSITIONS, NARROW_SIZES, 11)}
+        {render(NARROW_POSITIONS, NARROW_SIZES, ':narrow:')}
       </div>
     </>
   );

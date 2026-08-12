@@ -59,6 +59,21 @@ export default function Scene() {
   const [reduced, setReduced] = useState(false);
   const [mobile, setMobile] = useState(false);
   const [dpr, setDpr] = useState(1);
+  const [inView, setInView] = useState(true);
+
+  // The hero is a full-viewport WebGL scene. Without this it keeps drawing at
+  // full rate while the reader is metres down the page, alongside the two
+  // other canvases.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => setInView(e.isIntersecting),
+      { rootMargin: '120px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduced]);
 
   useEffect(() => {
     const isMobile = detectMobile();
@@ -90,6 +105,7 @@ export default function Scene() {
   return (
     <div ref={ref} className="h-full w-full">
       <Canvas
+        frameloop={inView ? 'always' : 'never'}
         gl={{
           antialias: !mobile,
           alpha: false,

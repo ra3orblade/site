@@ -31,7 +31,7 @@ export function Hero() {
             <HeroAccent />
           </div>
           <h1
-            className="text-5xl font-medium leading-[0.9] text-paper md:text-7xl lg:text-[9rem]"
+            className="hero-title text-5xl font-medium leading-[0.9] text-paper md:text-7xl lg:text-[9rem]"
             style={{ letterSpacing: 'var(--tracking-hero)' }}
             data-parallax="0.32"
           >

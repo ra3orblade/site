@@ -71,3 +71,21 @@ export function seedFrom(input: string) {
   for (let i = 0; i < input.length; i++) h = (h * 31 + input.charCodeAt(i)) | 0;
   return Math.abs(h);
 }
+
+/**
+ * Pick an index in [0, n) from a string key.
+ *
+ * `seedFrom` alone is not good enough here: it is a plain polynomial hash, so
+ * two keys differing only in a trailing digit differ by exactly that digit.
+ * Taking that modulo a small n walks the options in near-sequential order,
+ * which is visible as a pattern in a row of accents. The finaliser below
+ * (xorshift-multiply, as in murmur3) avalanches those neighbouring inputs
+ * apart before the modulo.
+ */
+export function hashIndex(key: string, n: number) {
+  let x = seedFrom(key) | 0;
+  x = Math.imul(x ^ (x >>> 16), 0x45d9f3b);
+  x = Math.imul(x ^ (x >>> 16), 0x45d9f3b);
+  x = (x ^ (x >>> 16)) >>> 0;
+  return x % n;
+}

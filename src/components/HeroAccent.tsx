@@ -16,7 +16,11 @@ export function HeroAccent() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    return registerAccent(el);
+    // Weighted up: it is the only accent in the hero that sits inside the
+    // composition rather than out in the margin, and at even odds among the
+    // ~10 nodes visible there it tore about once every twelve seconds, which
+    // reads as a static graphic.
+    return registerAccent(el, 6);
   }, []);
 
   return (

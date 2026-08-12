@@ -76,6 +76,13 @@ body {
   z-index: 50;
 }
 
+.hero-title {
+  text-shadow:
+    0 2px 48px rgba(0, 0, 0, 0.95),
+    0 2px 14px rgba(0, 0, 0, 0.9),
+    0 0 3px rgba(0, 0, 0, 0.7);
+}
+
 .hairline {
   border-color: rgba(255, 255, 255, 0.08);
 }
@@ -288,6 +295,11 @@ body {
   height: 100%;
   opacity: 0;
   object-fit: cover;
+}
+
+/* will-change only while the tear is running. Left on permanently it kept a
+   GPU layer alive for every full-size image copy on the page. */
+.is-glitching .photo-tear {
   will-change: transform, clip-path;
 }
 
@@ -881,6 +893,10 @@ body {
   inset: 0;
   pointer-events: none;
   opacity: 0;
+}
+
+.is-tear-in .glitch-slice,
+.is-tear-out .glitch-slice {
   will-change: transform, clip-path;
 }
 
