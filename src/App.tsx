@@ -9,7 +9,7 @@ import { ScrollProgress } from './components/ScrollProgress';
 
 export default function App() {
   return (
-    <main className="vignette grain min-h-screen bg-black text-paper">
+    <main className="vignette grain scanlines min-h-screen bg-black text-paper">
       <ScrollProgress />
       <Hero />
       <Lede />

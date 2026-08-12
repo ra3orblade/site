@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { CornerMarks } from './CornerMarks';
 import { EyebrowMark } from './EyebrowMark';
+import { FloatingAccents } from './FloatingAccents';
+import { GlitchText } from './GlitchText';
 
 type Props = {
   id: string;
@@ -17,7 +19,8 @@ export function Section({ id, eyebrow, title, children, className = '' }: Props)
       className={`relative px-6 py-10 md:px-12 md:py-6 lg:px-20 lg:py-6 ${className}`}
     >
       <CornerMarks />
-      <div className="mx-auto w-full max-w-4xl">
+      <FloatingAccents id={id} />
+      <div className="relative z-10 mx-auto w-full max-w-4xl">
         {(eyebrow || title) && (
           <header className="mb-8 md:mb-12" data-reveal>
             {eyebrow && (
@@ -28,7 +31,7 @@ export function Section({ id, eyebrow, title, children, className = '' }: Props)
             )}
             {title && (
               <h2 className="max-w-4xl text-4xl font-medium leading-[1.05] tracking-tight text-paper md:text-6xl lg:text-7xl">
-                {title}
+                <GlitchText text={title} />
               </h2>
             )}
           </header>

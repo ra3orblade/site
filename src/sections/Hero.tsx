@@ -3,6 +3,7 @@ import { profile } from '../data/cv';
 import { CornerMarks } from '../components/CornerMarks';
 import { EyebrowMark } from '../components/EyebrowMark';
 import { HeroAccent } from '../components/HeroAccent';
+import { FloatingAccents } from '../components/FloatingAccents';
 
 const Scene = lazy(() => import('../three/Scene'));
 
@@ -18,6 +19,7 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/85" />
 
       <CornerMarks />
+      <FloatingAccents id="hero" />
 
       <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-20 md:px-12 md:pb-28 lg:px-20">
         <div className="mx-auto w-full max-w-4xl">

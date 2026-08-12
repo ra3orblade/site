@@ -1,4 +1,6 @@
 import { CornerMarks } from '../components/CornerMarks';
+import { FloatingAccents } from '../components/FloatingAccents';
+import { PhotoFrame } from '../components/PhotoFrame';
 
 export function Lede() {
   return (
@@ -7,7 +9,8 @@ export function Lede() {
       className="relative px-6 py-10 md:px-12 md:py-6 lg:px-20 lg:py-6"
     >
       <CornerMarks />
-      <div className="mx-auto w-full max-w-4xl">
+      <FloatingAccents id="lede" />
+      <div className="relative z-10 mx-auto w-full max-w-4xl">
         <p
           className="text-3xl font-medium leading-[1.15] tracking-tight text-paper md:text-5xl lg:text-6xl"
           data-reveal
@@ -39,14 +42,7 @@ export function Lede() {
           data-reveal
           style={{ ['--reveal-delay' as string]: '240ms' }}
         >
-          <img
-            src="/photo1.png"
-            alt=""
-            aria-hidden
-            loading="lazy"
-            decoding="async"
-            className="block h-auto w-full opacity-90"
-          />
+          <PhotoFrame src="/photo1.png" label="Fig.01" index="Lede" />
         </figure>
       </div>
     </section>

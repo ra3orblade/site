@@ -1,6 +1,8 @@
 import { Section } from '../components/Section';
 import { KnowledgeGraph } from '../components/KnowledgeGraph';
 import { EyebrowMark } from '../components/EyebrowMark';
+import { AppIconStrip } from '../components/AppIconStrip';
+import { GlitchText } from '../components/GlitchText';
 import { selectedWork } from '../data/cv';
 
 export function Work() {
@@ -14,7 +16,7 @@ export function Work() {
             Selected work
           </div>
           <h2 className="text-4xl font-medium leading-[1.05] tracking-tight text-paper md:text-6xl lg:text-7xl">
-            A few things worth showing.
+            <GlitchText text="A few things worth showing." />
           </h2>
         </header>
       </div>
@@ -25,13 +27,25 @@ export function Work() {
             className="group grid grid-cols-[40px_1fr] gap-6 bg-black p-8 transition hover:bg-ink-2 md:grid-cols-[60px_1fr_auto] md:items-baseline md:gap-12 md:p-10"
           >
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
-              0{i + 1}
+              {String(i + 1).padStart(2, '0')}
             </div>
             <div>
               <h3 className="text-2xl font-medium tracking-tight text-paper md:text-3xl">
                 {w.title}
               </h3>
               <p className="mt-4 max-w-2xl leading-relaxed text-fog-3">{w.blurb}</p>
+              {w.apps && <AppIconStrip className="mt-6" seed={w.title} />}
+              {w.href && (
+                <a
+                  href={w.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-5 inline-flex items-center gap-2 border-b border-white/25 pb-0.5 font-mono text-[11px] uppercase tracking-[0.2em] text-fog-2 transition hover:border-white/60 hover:text-paper"
+                >
+                  {w.hrefLabel ?? w.href}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              )}
             </div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog-2">
               {w.context}

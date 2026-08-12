@@ -1,5 +1,7 @@
 import { profile } from '../data/cv';
 import { CornerMarks } from '../components/CornerMarks';
+import { GlitchText } from '../components/GlitchText';
+import { FloatingAccents } from '../components/FloatingAccents';
 import { EyebrowMark } from '../components/EyebrowMark';
 
 function MailIcon() {
@@ -41,14 +43,17 @@ export function Contact() {
       className="relative border-t hairline px-6 py-10 md:px-12 md:py-6 lg:px-20 lg:py-6"
     >
       <CornerMarks />
-      <div className="mx-auto w-full max-w-4xl">
+      <FloatingAccents id="contact" />
+      <div className="relative z-10 mx-auto w-full max-w-4xl">
         <div className="mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
           <EyebrowMark />
           Contact
         </div>
 
         <h2 className="text-4xl font-medium leading-[1.05] tracking-tight text-paper md:text-7xl lg:text-8xl">
-          Let&rsquo;s <span className="serif">build</span> something.
+          <GlitchText>
+            Let&rsquo;s <span className="serif">build</span> something.
+          </GlitchText>
         </h2>
 
         <p className="mt-8 max-w-2xl text-lg leading-relaxed text-fog-3 md:text-xl">

@@ -52,6 +52,21 @@ body {
   z-index: 60;
 }
 
+/* CRT scanlines over the whole page — 3px pitch, barely there. Sits with the
+   grain and vignette as the third layer of screen texture. */
+.scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.028) 0 1px,
+    transparent 1px 3px
+  );
+  z-index: 55;
+}
+
 .vignette::before {
   content: '';
   position: fixed;
@@ -73,6 +88,809 @@ body {
 }
 
 /* Scroll-triggered reveal removed; data-reveal attributes are no-ops now. */
+
+/*
+ * Glitch accents — hairline wireframe glyphs that drift slowly and, every few
+ * seconds, tear for a couple of frames. Adapted from the Brainstorm site's
+ * hero accents. Two nested elements so the transforms don't fight: the wrapper
+ * floats, the svg inside glitches. `steps(1, end)` keeps the tear snapping
+ * between discrete states instead of easing through them.
+ */
+.glitch-accent {
+  position: absolute;
+  line-height: 0;
+  pointer-events: none;
+  color: var(--color-fog-2);
+}
+
+/*
+ * Hidden until the scheduler picks this node and stamps `.is-glitching` on it.
+ * There is deliberately no `infinite` animation here — a fixed period is what
+ * made the old version read as a pattern rather than as interference.
+ */
+.glitch-geo {
+  opacity: 0;
+}
+
+.is-glitching .glitch-geo {
+  animation: glitch-flicker 0.8s steps(1, end) 1;
+}
+
+/* No scheduler under reduced motion, so show the accents statically instead of
+   leaving empty gutters. */
+@media (prefers-reduced-motion: reduce) {
+  .glitch-geo {
+    opacity: 0.4;
+  }
+}
+
+/* The hero mark is part of the fixed composition, so it stays visible and the
+   scheduler only tears it — it never drops to nothing. */
+.hero-accent-shape {
+  opacity: 0.85;
+}
+
+.is-glitching .hero-accent-shape {
+  animation: hero-accent-tear 0.8s steps(1, end) 1;
+}
+
+@keyframes hero-accent-tear {
+  0%,
+  100% {
+    transform: translate(0, 0) skewX(0deg);
+    opacity: 0.85;
+  }
+  8% {
+    transform: translate(2px, -1px) skewX(6deg);
+    opacity: 1;
+  }
+  16% {
+    transform: translate(-3px, 1px) skewX(-5deg);
+    opacity: 0.3;
+  }
+  24% {
+    transform: translate(2px, 1px) skewX(3deg);
+    opacity: 1;
+  }
+  34% {
+    transform: translate(0, 0) skewX(0deg);
+    opacity: 0.7;
+  }
+  72% {
+    transform: translate(-2px, 0) skewX(-4deg);
+    opacity: 1;
+  }
+  80% {
+    transform: translate(1px, 1px) skewX(2deg);
+    opacity: 0.35;
+  }
+}
+
+/*
+ * One flash: stutter in, hold briefly, cut out. Runs once per scheduler pick,
+ * never on a loop.
+ */
+@keyframes glitch-flicker {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) skewX(0deg);
+  }
+  6% {
+    opacity: 0.9;
+    transform: translate(2px, -1px) skewX(5deg);
+  }
+  12% {
+    opacity: 0.1;
+    transform: translate(-3px, 1px) skewX(-4deg);
+  }
+  18% {
+    opacity: 0.75;
+    transform: translate(2px, 1px) skewX(3deg);
+  }
+  26%,
+  62% {
+    opacity: 0.5;
+    transform: translate(0, 0) skewX(0deg);
+  }
+  70% {
+    opacity: 0.95;
+    transform: translate(-2px, 0) skewX(-3deg);
+  }
+  78% {
+    opacity: 0.14;
+    transform: translate(2px, 1px) skewX(4deg);
+  }
+  86% {
+    opacity: 0.55;
+    transform: translate(0, -1px) skewX(-1deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, 0) skewX(0deg);
+  }
+}
+
+/*
+ * Inline icon strip — the Brainstorm app set, in the content flow rather than
+ * the gutters, so it reads at every viewport width. Each glyph tears on its
+ * own offset; the strip as a whole never goes fully quiet.
+ */
+.glitch-icon {
+  color: var(--color-fog-2);
+  opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .glitch-icon {
+    animation: glitch-icon-flicker var(--glitch-duration, 6s) steps(1, end) infinite;
+    animation-delay: var(--glitch-delay, 0s);
+  }
+}
+
+@keyframes glitch-icon-flicker {
+  0%,
+  88%,
+  100% {
+    transform: translate(0, 0) skewX(0deg);
+    opacity: 0.5;
+    color: var(--color-fog-2);
+  }
+  89% {
+    transform: translate(1px, -1px) skewX(4deg);
+    opacity: 0.85;
+    color: var(--color-fog-3);
+  }
+  91% {
+    transform: translate(-1.5px, 1px) skewX(-3deg);
+    opacity: 0.28;
+  }
+  93% {
+    transform: translate(1px, 0) skewX(2deg);
+    opacity: 0.8;
+    color: var(--color-fog-3);
+  }
+  95% {
+    transform: translate(0, 1px) skewX(-1deg);
+    opacity: 0.42;
+  }
+}
+
+/* ── Photo frames ─────────────────────────────────────────────────────────
+ * A photograph presented as a monitor feed: instrumentation over the image,
+ * and the image itself tearing into displaced bands when the scheduler fires.
+ */
+
+.photo-frame {
+  --hud: var(--color-paper);
+}
+
+/* Copies of the base image, each clipped to a band. Idle they are invisible
+   and exactly aligned, so a flash reads as the picture pulling apart rather
+   than as something new appearing on top of it. */
+.photo-tear {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  object-fit: cover;
+  will-change: transform, clip-path;
+}
+
+.photo-tear-1 {
+  clip-path: inset(12% 0 71% 0);
+}
+.photo-tear-2 {
+  clip-path: inset(44% 0 39% 0);
+}
+.photo-tear-3 {
+  clip-path: inset(76% 0 8% 0);
+}
+
+.is-glitching .photo-tear-1 {
+  animation: photo-tear-a 0.8s steps(1, end) 1;
+}
+.is-glitching .photo-tear-2 {
+  animation: photo-tear-b 0.8s steps(1, end) 1;
+}
+.is-glitching .photo-tear-3 {
+  animation: photo-tear-c 0.8s steps(1, end) 1;
+}
+
+@keyframes photo-tear-a {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  6% {
+    opacity: 1;
+    transform: translate3d(-3.5%, 0, 0);
+  }
+  15% {
+    opacity: 1;
+    transform: translate3d(2%, 0, 0);
+  }
+  26% {
+    opacity: 0;
+  }
+  58% {
+    opacity: 1;
+    transform: translate3d(-1.5%, 0, 0);
+  }
+  70% {
+    opacity: 0;
+  }
+}
+
+@keyframes photo-tear-b {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  10% {
+    opacity: 1;
+    transform: translate3d(3%, 0, 0);
+  }
+  22% {
+    opacity: 0;
+  }
+  46% {
+    opacity: 1;
+    transform: translate3d(-2.5%, 0, 0);
+  }
+  56% {
+    opacity: 1;
+    transform: translate3d(1%, 0, 0);
+  }
+  66% {
+    opacity: 0;
+  }
+}
+
+@keyframes photo-tear-c {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  8% {
+    opacity: 1;
+    transform: translate3d(2.5%, 0, 0);
+  }
+  18% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+    transform: translate3d(-4%, 0, 0);
+  }
+  52% {
+    opacity: 1;
+    transform: translate3d(1.5%, 0, 0);
+  }
+  62% {
+    opacity: 0;
+  }
+}
+
+/* Scanlines local to the frame — tighter pitch than the page-level pass, so
+   the image reads as the thing being displayed. */
+.photo-scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.22) 0 1px,
+    transparent 1px 2px
+  );
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+}
+
+.photo-hud {
+  color: var(--hud);
+}
+
+.hud-bracket {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  opacity: 0.75;
+}
+.hud-tl {
+  top: 14px;
+  left: 14px;
+  border-top: 1px solid currentColor;
+  border-left: 1px solid currentColor;
+}
+.hud-tr {
+  top: 14px;
+  right: 14px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+}
+.hud-bl {
+  bottom: 14px;
+  left: 14px;
+  border-bottom: 1px solid currentColor;
+  border-left: 1px solid currentColor;
+}
+.hud-br {
+  bottom: 14px;
+  right: 14px;
+  border-bottom: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+}
+
+.hud-rule {
+  position: absolute;
+  background: currentColor;
+  opacity: 0.28;
+}
+.hud-rule-v {
+  top: 0;
+  bottom: 0;
+  left: 33%;
+  width: 1px;
+}
+.hud-rule-h {
+  left: 0;
+  right: 0;
+  top: 62%;
+  height: 1px;
+}
+
+.hud-reticle {
+  position: absolute;
+  top: 50%;
+  left: 33%;
+  width: 21%;
+  max-width: 150px;
+  aspect-ratio: 1;
+  height: auto;
+  transform: translate(-50%, -50%);
+  opacity: 0.8;
+}
+
+.hud-ticks {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 46px;
+  height: 6px;
+  opacity: 0.5;
+}
+
+.hud-label {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.hud-label-tl {
+  top: 18px;
+  left: 50px;
+}
+.hud-label-br {
+  right: 50px;
+  bottom: 17px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hud-dot {
+    animation: hud-pulse 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes hud-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/*
+ * Every part of the frame breaks up on its own offsets and its own timing.
+ * Animating the HUD as a single layer just shook the whole overlay, which
+ * reads as a camera bump; the instrumentation coming apart piece by piece is
+ * what reads as signal loss.
+ */
+.is-glitching .hud-tl {
+  animation: hud-break-a 0.8s steps(1, end) 1;
+}
+.is-glitching .hud-tr {
+  animation: hud-break-b 0.8s steps(1, end) 1;
+}
+.is-glitching .hud-bl {
+  animation: hud-break-c 0.8s steps(1, end) 1;
+}
+.is-glitching .hud-br {
+  animation: hud-break-a 0.8s steps(1, end) 0.07s 1;
+}
+.is-glitching .hud-rule-v {
+  animation: hud-slip-x 0.8s steps(1, end) 1;
+}
+.is-glitching .hud-rule-h {
+  animation: hud-slip-y 0.8s steps(1, end) 0.04s 1;
+}
+.is-glitching .hud-reticle {
+  animation: hud-lock 0.8s steps(1, end) 1;
+}
+.is-glitching .hud-ticks {
+  animation: hud-slip-x 0.8s steps(1, end) 0.11s 1;
+}
+.is-glitching .hud-label-tl {
+  animation: hud-break-b 0.8s steps(1, end) 0.05s 1;
+}
+.is-glitching .hud-label-br {
+  animation: hud-break-c 0.8s steps(1, end) 0.13s 1;
+}
+
+@keyframes hud-break-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.75;
+  }
+  7% {
+    transform: translate3d(7px, -2px, 0);
+    opacity: 0.1;
+  }
+  16% {
+    transform: translate3d(-4px, 1px, 0);
+    opacity: 1;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  52% {
+    transform: translate3d(3px, 0, 0);
+    opacity: 1;
+  }
+  68% {
+    transform: translate3d(0, 2px, 0);
+    opacity: 0.35;
+  }
+}
+
+@keyframes hud-break-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.75;
+  }
+  11% {
+    transform: translate3d(-6px, 1px, 0);
+    opacity: 1;
+  }
+  24% {
+    opacity: 0.08;
+  }
+  41% {
+    transform: translate3d(5px, -2px, 0);
+    opacity: 0.9;
+  }
+  60% {
+    transform: translate3d(-2px, 0, 0);
+    opacity: 0.3;
+  }
+  74% {
+    opacity: 1;
+  }
+}
+
+@keyframes hud-break-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.75;
+  }
+  9% {
+    opacity: 0.15;
+  }
+  21% {
+    transform: translate3d(4px, 2px, 0);
+    opacity: 1;
+  }
+  37% {
+    transform: translate3d(-7px, 0, 0);
+    opacity: 0.45;
+  }
+  55% {
+    opacity: 1;
+  }
+  71% {
+    transform: translate3d(2px, -1px, 0);
+    opacity: 0.12;
+  }
+}
+
+/* Rules snap off-axis and drop out, as if the overlay lost sync. */
+@keyframes hud-slip-x {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.28;
+  }
+  10% {
+    transform: translate3d(-22px, 0, 0);
+    opacity: 0.7;
+  }
+  22% {
+    opacity: 0;
+  }
+  44% {
+    transform: translate3d(14px, 0, 0);
+    opacity: 0.55;
+  }
+  63% {
+    transform: translate3d(-5px, 0, 0);
+    opacity: 0.9;
+  }
+  78% {
+    opacity: 0.1;
+  }
+}
+
+@keyframes hud-slip-y {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.28;
+  }
+  14% {
+    transform: translate3d(0, 12px, 0);
+    opacity: 0.65;
+  }
+  27% {
+    opacity: 0;
+  }
+  49% {
+    transform: translate3d(0, -18px, 0);
+    opacity: 0.6;
+  }
+  66% {
+    transform: translate3d(0, 4px, 0);
+    opacity: 0.95;
+  }
+  80% {
+    opacity: 0.08;
+  }
+}
+
+/* The reticle loses and re-acquires — jumps off centre, blanks, snaps back. */
+@keyframes hud-lock {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+  8% {
+    transform: translate(-58%, -46%) scale(1.08);
+    opacity: 0.25;
+  }
+  19% {
+    transform: translate(-44%, -54%) scale(0.94);
+    opacity: 1;
+  }
+  33% {
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-52%, -49%) scale(1.03);
+    opacity: 0.9;
+  }
+  64% {
+    transform: translate(-47%, -51%) scale(0.97);
+    opacity: 0.3;
+  }
+  81% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/*
+ * Heading tear — clip-path bands slice the line apart for a few frames as it
+ * enters or leaves the viewport. Nothing about the text itself changes, so
+ * wrapping and inline italics are untouched.
+ */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+/* Copies stacked over the real text. Absolute against the wrapper, so they
+   take its exact width and wrap identically — no reflow, italics intact. */
+.glitch-slice {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, clip-path;
+}
+
+/* Each slice owns a horizontal band and moves on its own offsets and its own
+   timing. Overlapping, differently-displaced bands are what separate a tear
+   from a blink. */
+.glitch-slice-1 {
+  clip-path: inset(4% 0 68% 0);
+}
+.glitch-slice-2 {
+  clip-path: inset(36% 0 34% 0);
+}
+.glitch-slice-3 {
+  clip-path: inset(70% 0 2% 0);
+}
+
+.is-tear-in .glitch-slice-1 {
+  animation: slice-a 0.62s steps(1, end) 1;
+}
+.is-tear-in .glitch-slice-2 {
+  animation: slice-b 0.62s steps(1, end) 1;
+}
+.is-tear-in .glitch-slice-3 {
+  animation: slice-c 0.62s steps(1, end) 1;
+}
+
+.is-tear-out .glitch-slice-1 {
+  animation: slice-c 0.44s steps(1, end) 1;
+}
+.is-tear-out .glitch-slice-2 {
+  animation: slice-a 0.44s steps(1, end) 1;
+}
+.is-tear-out .glitch-slice-3 {
+  animation: slice-b 0.44s steps(1, end) 1;
+}
+
+/* The base text dips slightly while the slices are out, so the displaced
+   bands read as pulled off the word rather than layered on top of it. */
+.is-tear-in > :not(.glitch-slice),
+.is-tear-out > :not(.glitch-slice) {
+  animation: text-base-dip 0.5s steps(1, end) 1;
+}
+
+@keyframes text-base-dip {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0.45;
+  }
+  45% {
+    opacity: 0.85;
+  }
+  65% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes slice-a {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  8% {
+    opacity: 1;
+    transform: translate3d(-14px, -2px, 0);
+  }
+  24% {
+    opacity: 1;
+    transform: translate3d(9px, 1px, 0);
+  }
+  40% {
+    opacity: 0;
+  }
+  62% {
+    opacity: 1;
+    transform: translate3d(-6px, 0, 0);
+  }
+  76% {
+    opacity: 0;
+  }
+}
+
+@keyframes slice-b {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  14% {
+    opacity: 1;
+    transform: translate3d(12px, 1px, 0);
+  }
+  30% {
+    opacity: 0;
+  }
+  48% {
+    opacity: 1;
+    transform: translate3d(-11px, -1px, 0);
+  }
+  58% {
+    opacity: 1;
+    transform: translate3d(5px, 0, 0);
+  }
+  70% {
+    opacity: 0;
+  }
+}
+
+@keyframes slice-c {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  6% {
+    opacity: 1;
+    transform: translate3d(7px, 2px, 0);
+  }
+  20% {
+    opacity: 0;
+  }
+  36% {
+    opacity: 1;
+    transform: translate3d(-16px, 0, 0);
+  }
+  52% {
+    opacity: 1;
+    transform: translate3d(4px, -1px, 0);
+  }
+  68% {
+    opacity: 0;
+  }
+}
+
+/* The inline eyebrow diamond tears on the same scheduler, but stays visible
+   between flashes — it is part of the eyebrow, not a floating accent. */
+.is-glitching .glitch-mark {
+  animation: glitch-mark-flicker 0.7s steps(1, end) 1;
+}
+
+@keyframes glitch-mark-flicker {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  14% {
+    transform: translate(1px, -1px) skewX(6deg);
+    opacity: 0.35;
+  }
+  32% {
+    transform: translate(-1px, 1px) skewX(-5deg);
+    opacity: 1;
+  }
+  56% {
+    transform: translate(1px, 0) skewX(2deg);
+    opacity: 0.5;
+  }
+  74% {
+    transform: translate(0, 0) skewX(-1deg);
+    opacity: 0.9;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html {

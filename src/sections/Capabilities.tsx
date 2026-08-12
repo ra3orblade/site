@@ -1,5 +1,8 @@
 import { CapabilityIcon } from '../components/CapabilityIcon';
 import { CornerMarks } from '../components/CornerMarks';
+import { GlitchText } from '../components/GlitchText';
+import { PhotoFrame } from '../components/PhotoFrame';
+import { FloatingAccents } from '../components/FloatingAccents';
 import { CubicScene } from '../components/CubicScene';
 import { Divider } from '../components/Divider';
 import { EyebrowMark } from '../components/EyebrowMark';
@@ -14,14 +17,15 @@ export function Capabilities() {
       className="relative px-6 py-10 md:px-12 md:py-6 lg:px-20 lg:py-6"
     >
       <CornerMarks />
-      <div className="mx-auto w-full max-w-4xl">
+      <FloatingAccents id="capabilities" />
+      <div className="relative z-10 mx-auto w-full max-w-4xl">
         <header className="mb-8 md:mb-12" data-reveal>
           <div className="mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
             <EyebrowMark />
             How I work
           </div>
           <h2 className="text-4xl font-medium leading-[1.05] tracking-tight text-paper md:text-6xl lg:text-7xl">
-            AI-native, end to end.
+            <GlitchText text="AI-native, end to end." />
           </h2>
         </header>
 
@@ -30,14 +34,7 @@ export function Capabilities() {
           data-reveal
           style={{ ['--reveal-delay' as string]: '120ms' }}
         >
-          <img
-            src="/photo2.png"
-            alt=""
-            aria-hidden
-            loading="lazy"
-            decoding="async"
-            className="block h-auto w-full opacity-90"
-          />
+          <PhotoFrame src="/photo2.png" label="Fig.02" index="Cap" />
         </figure>
 
         <article className="mt-10 border-y hairline py-10 md:mt-12 md:py-12" data-reveal>
