@@ -40,6 +40,57 @@ function Shape({ shape }: { shape: GlitchShape }) {
           <polygon points="22,14 28,18 28,26 22,30 16,26 16,18" opacity="0.5" />
         </>
       );
+    case 'circle':
+      return (
+        <>
+          <circle cx="22" cy="22" r="16" />
+          <circle cx="22" cy="22" r="7" opacity="0.45" />
+          <line x1="6" y1="22" x2="38" y2="22" opacity="0.3" />
+        </>
+      );
+    case 'square':
+      return (
+        <>
+          <rect x="7" y="7" width="30" height="30" />
+          <rect x="15" y="15" width="14" height="14" opacity="0.45" />
+          <line x1="7" y1="7" x2="37" y2="37" opacity="0.25" />
+        </>
+      );
+    case 'hexagon':
+      return (
+        <>
+          <polygon points="22,4 37,13 37,31 22,40 7,31 7,13" />
+          <line x1="7" y1="13" x2="37" y2="31" opacity="0.35" />
+        </>
+      );
+    case 'octagon':
+      return (
+        <>
+          <polygon points="37.7,28.5 28.5,37.7 15.5,37.7 6.3,28.5 6.3,15.5 15.5,6.3 28.5,6.3 37.7,15.5" />
+          <polygon
+            points="30.9,26.4 26.4,30.9 17.6,30.9 13.1,26.4 13.1,17.6 17.6,13.1 26.4,13.1 30.9,17.6"
+            opacity="0.4"
+          />
+        </>
+      );
+    case 'star':
+      return (
+        <polygon points="22,4 26.4,15.9 39.1,16.4 29.1,24.3 32.6,36.6 22,29.5 11.4,36.6 14.9,24.3 4.9,16.4 17.6,15.9" />
+      );
+    case 'cross':
+      return (
+        <>
+          <path d="M18 6h8v12h12v8H26v12h-8V26H6v-8h12z" />
+          <line x1="18" y1="18" x2="26" y2="26" opacity="0.3" />
+        </>
+      );
+    case 'chevron':
+      return (
+        <>
+          <polyline points="10,14 22,26 34,14" />
+          <polyline points="10,24 22,36 34,24" opacity="0.45" />
+        </>
+      );
     default:
       // ico — the hexagon the hero mark is built from
       return (

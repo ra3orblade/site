@@ -277,24 +277,166 @@ body {
   will-change: transform, clip-path;
 }
 
-.photo-tear-1 {
+/* ── variant: scan — horizontal bands sliding sideways ── */
+.photo-frame-scan .photo-tear-1 {
   clip-path: inset(12% 0 71% 0);
 }
-.photo-tear-2 {
+.photo-frame-scan .photo-tear-2 {
   clip-path: inset(44% 0 39% 0);
 }
-.photo-tear-3 {
+.photo-frame-scan .photo-tear-3 {
   clip-path: inset(76% 0 8% 0);
 }
 
-.is-glitching .photo-tear-1 {
+.photo-frame-scan.is-glitching .photo-tear-1 {
   animation: photo-tear-a 0.8s steps(1, end) 1;
 }
-.is-glitching .photo-tear-2 {
+.photo-frame-scan.is-glitching .photo-tear-2 {
   animation: photo-tear-b 0.8s steps(1, end) 1;
 }
-.is-glitching .photo-tear-3 {
+.photo-frame-scan.is-glitching .photo-tear-3 {
   animation: photo-tear-c 0.8s steps(1, end) 1;
+}
+
+/* ── variant: sweep — vertical columns jumping on Y, plus a desync roll ── */
+.photo-frame-sweep .photo-tear-1 {
+  clip-path: inset(0 78% 0 4%);
+}
+.photo-frame-sweep .photo-tear-2 {
+  clip-path: inset(0 52% 0 28%);
+}
+.photo-frame-sweep .photo-tear-3 {
+  clip-path: inset(0 26% 0 55%);
+}
+.photo-frame-sweep .photo-tear-4 {
+  clip-path: inset(0 2% 0 80%);
+}
+
+.photo-frame-sweep.is-glitching .photo-tear-1 {
+  animation: photo-col-a 1s steps(1, end) 1;
+}
+.photo-frame-sweep.is-glitching .photo-tear-2 {
+  animation: photo-col-b 1s steps(1, end) 0.05s 1;
+}
+.photo-frame-sweep.is-glitching .photo-tear-3 {
+  animation: photo-col-c 1s steps(1, end) 0.02s 1;
+}
+.photo-frame-sweep.is-glitching .photo-tear-4 {
+  animation: photo-col-b 1s steps(1, end) 0.11s 1;
+}
+
+@keyframes photo-col-a {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  7% {
+    opacity: 1;
+    transform: translate3d(0, -6%, 0);
+  }
+  19% {
+    opacity: 0;
+  }
+  44% {
+    opacity: 1;
+    transform: translate3d(0, 4%, 0);
+  }
+  58% {
+    opacity: 0;
+  }
+}
+
+@keyframes photo-col-b {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  12% {
+    opacity: 1;
+    transform: translate3d(0, 7%, 0);
+  }
+  27% {
+    opacity: 0;
+  }
+  51% {
+    opacity: 1;
+    transform: translate3d(0, -5%, 0);
+  }
+  64% {
+    opacity: 1;
+    transform: translate3d(0, 2%, 0);
+  }
+  73% {
+    opacity: 0;
+  }
+}
+
+@keyframes photo-col-c {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  9% {
+    opacity: 1;
+    transform: translate3d(0, 5%, 0);
+  }
+  22% {
+    opacity: 0;
+  }
+  38% {
+    opacity: 1;
+    transform: translate3d(0, -8%, 0);
+  }
+  55% {
+    opacity: 1;
+    transform: translate3d(0, 3%, 0);
+  }
+  68% {
+    opacity: 0;
+  }
+}
+
+/* Rolling desync bar — only on 'sweep'. Idle it is parked off-frame. */
+.photo-roll {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 14%;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.16),
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
+  mix-blend-mode: overlay;
+  transform: translateY(-120%);
+}
+
+.is-glitching .photo-roll {
+  animation: photo-roll 1s linear 1;
+}
+
+@keyframes photo-roll {
+  0% {
+    opacity: 0;
+    transform: translateY(-120%);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(700%);
+  }
 }
 
 @keyframes photo-tear-a {
@@ -902,5 +1044,55 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Instrument layout differs per variant so the two frames don't read as the
+   same overlay pasted twice. */
+.photo-frame-sweep .hud-rule-v {
+  left: auto;
+  right: 30%;
+}
+.photo-frame-sweep .hud-rule-h {
+  top: 34%;
+}
+.photo-frame-sweep .hud-reticle {
+  left: auto;
+  right: 30%;
+  top: 34%;
+  transform: translate(50%, -50%);
+}
+.photo-frame-sweep.is-glitching .hud-reticle {
+  animation: hud-lock-b 0.9s steps(1, end) 1;
+}
+.photo-frame-sweep .hud-ticks {
+  bottom: auto;
+  top: 46px;
+}
+
+@keyframes hud-lock-b {
+  0%,
+  100% {
+    transform: translate(50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+  10% {
+    transform: translate(58%, -58%) scale(0.9);
+    opacity: 1;
+  }
+  24% {
+    opacity: 0;
+  }
+  42% {
+    transform: translate(42%, -44%) scale(1.12);
+    opacity: 0.9;
+  }
+  60% {
+    transform: translate(52%, -52%) scale(0.96);
+    opacity: 0.2;
+  }
+  78% {
+    transform: translate(50%, -50%) scale(1);
+    opacity: 1;
   }
 }

@@ -5,6 +5,7 @@ export const profile = {
   email: 'andrew.simachev@gmail.com',
   github: 'https://github.com/ra3orblade',
   linkedin: 'https://linkedin.com/in/ra3orblade',
+  x: 'https://x.com/Ra3orbladez',
   summary:
     'Senior front-end engineer and architect with over 15 years building production web applications, designing component architectures, and leading cross-functional engineering teams. Founding engineer of an open-source, local-first knowledge-management platform used by thousands of people. For the past year I have been working AI-natively — Claude Code as a primary development tool, spec-driven workflows as the default, and agentic multi-step tasks where I orchestrate subagents instead of writing every line by hand.',
 } as const;
@@ -57,7 +58,7 @@ export const experience: ExperienceEntry[] = [
     bullets: [
       'Led engineering for a SaaS product-analytics platform serving game developers, managing 15 engineers in an Agile environment.',
       'Authored technical specifications and roadmaps, aligning product development with business objectives across departments.',
-      'Introduced a Greenplum cluster, reducing complex analytical query times by more than 60%.',
+      'Oversaw the move to a Greenplum cluster, which cut complex analytical query times by more than 60%.',
       'Oversaw a ground-up platform redesign that improved retention and reduced support-ticket volume by 40%.',
       'Built and grew the front-end team — hiring, one-on-ones, performance conversations, mentoring, technical direction.',
     ],
@@ -158,7 +159,7 @@ export const selectedWork: WorkEntry[] = [
   {
     title: 'devtodev — platform redesign',
     blurb:
-      'Ground-up redesign of a product-analytics SaaS for game developers. Improved retention and cut support-ticket volume by 40%. A Greenplum cluster I introduced reduced analytical query times by more than 60%.',
+      'Ground-up redesign of a product-analytics SaaS for game developers. Improved retention and cut support-ticket volume by 40%. Also oversaw the move to a Greenplum cluster, which cut analytical query times by more than 60%.',
     context: 'devtodev, 2018 — 2021',
   },
   {

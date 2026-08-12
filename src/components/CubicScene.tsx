@@ -380,7 +380,7 @@ export function CubicScene() {
     return (
       <div
         ref={wrapperRef}
-        className="relative h-[340px] w-full md:h-[420px] lg:h-[480px]"
+        className="relative h-[230px] w-full md:h-[420px] lg:h-[480px]"
         aria-hidden
       />
     );
@@ -390,7 +390,7 @@ export function CubicScene() {
     return (
       <div
         ref={wrapperRef}
-        className="relative h-[340px] w-full md:h-[420px] lg:h-[480px]"
+        className="relative h-[230px] w-full md:h-[420px] lg:h-[480px]"
         style={{
           background:
             'radial-gradient(ellipse at center, rgba(245,245,245,0.06) 0%, rgba(0,0,0,0) 60%)',
@@ -403,7 +403,8 @@ export function CubicScene() {
   return (
     <div
       ref={wrapperRef}
-      className="relative h-[340px] w-full md:h-[420px] lg:h-[480px] overflow-hidden bg-black"
+      className="relative h-[230px] w-full md:h-[420px] lg:h-[480px] overflow-hidden bg-black"
+      style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 60%)' }}
       aria-hidden
     >
       <Canvas

@@ -16,10 +16,17 @@ type Props = {
   /** Mono readout in the corner. Decorative. */
   label: string;
   index: string;
+  /**
+   * 'scan' tears the image into horizontal bands that slide sideways, with the
+   * reticle left of centre. 'sweep' cuts vertical columns that jump up and
+   * down and adds a rolling desync bar, reticle to the right. Two frames
+   * running the identical animation read as one effect used twice.
+   */
+  variant?: 'scan' | 'sweep';
   className?: string;
 };
 
-export function PhotoFrame({ src, label, index, className = '' }: Props) {
+export function PhotoFrame({ src, label, index, variant = 'scan', className = '' }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,7 +36,10 @@ export function PhotoFrame({ src, label, index, className = '' }: Props) {
   }, []);
 
   return (
-    <div ref={ref} className={`photo-frame relative isolate overflow-hidden ${className}`}>
+    <div
+      ref={ref}
+      className={`photo-frame photo-frame-${variant} relative isolate overflow-hidden ${className}`}
+    >
       <img
         src={src}
         alt=""
@@ -39,8 +49,9 @@ export function PhotoFrame({ src, label, index, className = '' }: Props) {
         className="block h-auto w-full opacity-90"
       />
 
-      {/* Torn bands — same image, clipped and displaced. */}
-      {[1, 2, 3].map((n) => (
+      {/* Torn slices — same image, clipped and displaced. Four on 'sweep' so
+          the vertical cut reads as columns rather than a split. */}
+      {(variant === 'sweep' ? [1, 2, 3, 4] : [1, 2, 3]).map((n) => (
         <img
           key={n}
           src={src}
@@ -53,6 +64,7 @@ export function PhotoFrame({ src, label, index, className = '' }: Props) {
       ))}
 
       <div className="photo-scan" aria-hidden />
+      {variant === 'sweep' && <div className="photo-roll" aria-hidden />}
 
       {/* HUD. Hairlines and brackets in the accent, everything sized in % so
           it tracks the image at any width. */}

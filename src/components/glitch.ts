@@ -31,7 +31,39 @@ export const STRIP_APPS: AppName[] = [
   'agent',
 ];
 
-export type GlitchShape = 'ico' | 'tetra' | 'triangle' | 'diamond' | 'ring';
+/**
+ * Wireframe vocabulary for the accents. The Brainstorm site ships five
+ * (ico, tetra, triangle, diamond, ring); the rest extend that set with the
+ * primitives it lacks, drawn in the same hairline, faceted style.
+ */
+export type GlitchShape =
+  | 'ico'
+  | 'tetra'
+  | 'triangle'
+  | 'diamond'
+  | 'ring'
+  | 'circle'
+  | 'square'
+  | 'hexagon'
+  | 'octagon'
+  | 'star'
+  | 'cross'
+  | 'chevron';
+
+export const GLITCH_SHAPES: GlitchShape[] = [
+  'ico',
+  'tetra',
+  'triangle',
+  'diamond',
+  'ring',
+  'circle',
+  'square',
+  'hexagon',
+  'octagon',
+  'star',
+  'cross',
+  'chevron',
+];
 
 /** Stable per-instance variation, so accents don't flicker in unison. */
 export function seedFrom(input: string) {

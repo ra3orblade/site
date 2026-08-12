@@ -28,6 +28,14 @@ function GitHubIcon() {
   );
 }
 
+function XIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden>
+      <path d="M18.9 2h3.34l-7.3 8.34L23.5 22h-6.72l-5.26-6.88L5.5 22H2.16l7.8-8.92L1.5 2h6.89l4.76 6.29L18.9 2zm-1.17 18h1.85L7.36 3.9H5.37L17.73 20z" />
+    </svg>
+  );
+}
+
 function DownloadIcon() {
   return (
     <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -40,7 +48,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="relative border-t hairline px-6 py-10 md:px-12 md:py-6 lg:px-20 lg:py-6"
+      className="relative border-t hairline px-5 py-6 md:px-12 md:py-6 lg:px-20 lg:py-6"
     >
       <CornerMarks />
       <FloatingAccents id="contact" />
@@ -76,6 +84,14 @@ export function Contact() {
           >
             <MailIcon />
             Mail me
+          </a>
+          <a
+            href={profile.x}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-w-[160px] items-center justify-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm text-paper transition hover:border-white/40"
+          >
+            <XIcon />X
           </a>
           <a
             href={profile.github}

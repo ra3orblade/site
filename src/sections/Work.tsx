@@ -8,9 +8,12 @@ import { selectedWork } from '../data/cv';
 export function Work() {
   return (
     <Section id="work">
-      <div className="relative mb-10 md:mb-12" data-reveal>
+      <div className="relative mb-6 md:mb-12" data-reveal>
         <KnowledgeGraph />
-        <header className="overlay-text pointer-events-none absolute inset-x-0 bottom-0 z-10 p-2 md:p-4">
+        {/* Overlaid on the graph from md up; on phones the graph is short
+            enough that the heading sat right on top of the nodes, so it drops
+            below instead. */}
+        <header className="overlay-text pointer-events-none relative z-10 mt-4 md:absolute md:inset-x-0 md:bottom-0 md:mt-0 md:p-4">
           <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
             <EyebrowMark />
             Selected work
@@ -24,8 +27,11 @@ export function Work() {
         {selectedWork.map((w, i) => (
           <article
             key={w.title}
-            className="group grid grid-cols-[40px_1fr] gap-6 bg-black p-8 transition hover:bg-ink-2 md:grid-cols-[60px_1fr_auto] md:items-baseline md:gap-12 md:p-10"
+            className="group grid grid-cols-1 gap-3 bg-black p-6 transition hover:bg-ink-2 md:grid-cols-[60px_1fr_auto] md:items-baseline md:gap-12 md:p-10"
           >
+            {/* On phones the 40px index column left the text ~226px wide and
+                every title wrapped to three lines, so the whole entry stacks
+                instead. */}
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
               {String(i + 1).padStart(2, '0')}
             </div>

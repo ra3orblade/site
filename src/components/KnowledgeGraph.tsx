@@ -296,7 +296,7 @@ export function KnowledgeGraph() {
     return (
       <div
         ref={wrapperRef}
-        className="relative h-[380px] w-full md:h-[460px] lg:h-[540px]"
+        className="relative h-[240px] w-full md:h-[460px] lg:h-[540px]"
         aria-hidden
       />
     );
@@ -306,7 +306,7 @@ export function KnowledgeGraph() {
     return (
       <div
         ref={wrapperRef}
-        className="relative h-[380px] w-full md:h-[460px] lg:h-[540px]"
+        className="relative h-[240px] w-full md:h-[460px] lg:h-[540px]"
         style={{
           background:
             'radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 60%)',
@@ -319,7 +319,8 @@ export function KnowledgeGraph() {
   return (
     <div
       ref={wrapperRef}
-      className="relative h-[380px] w-full md:h-[460px] lg:h-[540px]"
+      className="relative h-[240px] w-full md:h-[460px] lg:h-[540px]"
+      style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 60%)' }}
       aria-hidden
     >
       <Canvas
