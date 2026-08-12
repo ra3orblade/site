@@ -7,21 +7,23 @@ export default defineConfig({
   build: {
     target: 'es2022',
     cssCodeSplit: true,
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules/three/')) return 'three';
-          if (
-            id.includes('@react-three/fiber') ||
-            id.includes('@react-three/drei') ||
-            id.includes('@react-three/postprocessing') ||
-            id.includes('node_modules/postprocessing/')
-          ) {
-            return 'r3f';
-          }
-          return undefined;
-        },
-      },
+    /*
+     * The three.js bundle is ~1MB (324KB gzipped) and is reachable only
+     * through lazy() — the hero scene, the knowledge graph and the cubes.
+     * Vite still emits a <link rel="modulepreload"> for it in index.html,
+     * which means every visit downloads it up front, phones included, even
+     * though nothing on a phone ever renders a canvas. Dropping the hint
+     * leaves the chunk to load on the dynamic import that actually needs it.
+     */
+    modulePreload: {
+      resolveDependencies: (_url, deps) => deps.filter((d) => !/\/(r3f|three)-/.test(d)),
     },
+    /*
+     * No manualChunks for three.js. Forcing it into a named chunk made the
+     * bundler link that chunk statically from the entry, so it loaded on every
+     * visit despite all three of its consumers being behind lazy(). Left
+     * alone, it lands in the async graph and is fetched only when a scene
+     * actually mounts.
+     */
   },
 });

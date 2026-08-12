@@ -3,10 +3,15 @@ import { CornerMarks } from '../components/CornerMarks';
 import { GlitchText } from '../components/GlitchText';
 import { PhotoFrame } from '../components/PhotoFrame';
 import { FloatingAccents } from '../components/FloatingAccents';
-import { CubicScene } from '../components/CubicScene';
+import { lazy } from 'react';
+import { LazyVisual } from '../components/LazyVisual';
 import { Divider } from '../components/Divider';
 import { EyebrowMark } from '../components/EyebrowMark';
 import { aiPractice, capabilities, stack } from '../data/cv';
+
+const CubicScene = lazy(() =>
+  import('../components/CubicScene').then((m) => ({ default: m.CubicScene })),
+);
 
 const CAPABILITY_ICONS = ['architecture', 'data', 'platform'] as const;
 
@@ -57,7 +62,9 @@ export function Capabilities() {
         </article>
 
         <div className="mt-10 md:mt-12">
-          <CubicScene />
+          <LazyVisual className="h-[420px] w-full lg:h-[480px]">
+            <CubicScene />
+          </LazyVisual>
         </div>
 
         <Divider className="mt-10 md:mt-12" />

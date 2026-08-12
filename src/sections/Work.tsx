@@ -1,15 +1,22 @@
 import { Section } from '../components/Section';
-import { KnowledgeGraph } from '../components/KnowledgeGraph';
+import { lazy } from 'react';
+import { LazyVisual } from '../components/LazyVisual';
 import { EyebrowMark } from '../components/EyebrowMark';
 import { AppIconStrip } from '../components/AppIconStrip';
 import { GlitchText } from '../components/GlitchText';
 import { selectedWork } from '../data/cv';
 
+const KnowledgeGraph = lazy(() =>
+  import('../components/KnowledgeGraph').then((m) => ({ default: m.KnowledgeGraph })),
+);
+
 export function Work() {
   return (
     <Section id="work">
       <div className="relative mb-6 md:mb-12" data-reveal>
-        <KnowledgeGraph />
+        <LazyVisual className="h-[460px] w-full lg:h-[540px]">
+          <KnowledgeGraph />
+        </LazyVisual>
         {/* Overlaid on the graph from md up; on phones the graph is short
             enough that the heading sat right on top of the nodes, so it drops
             below instead. */}
