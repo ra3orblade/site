@@ -20,12 +20,27 @@ export type ExperienceEntry = {
 
 export const experience: ExperienceEntry[] = [
   {
+    company: 'Brainstorm',
+    role: 'Founder',
+    location: 'Berlin',
+    period: 'May 2026 — Present',
+    bullets: [
+      'Founded an AI-native organization building a local-first knowledge operating system — a secure desktop shell hosting sandboxed apps over a single local vault.',
+      'Set product and technical direction: apps compose over one data model via Block Protocol, real-time conflict-free sync on Yjs CRDTs, a shared Lexical editor across every surface.',
+      'Designed the capability-governed sandbox model — apps isolated, every request to vault data mediated through a per-vault capability ledger. Security as an architectural boundary, not an add-on.',
+      'Own the core repositories: shell, the zero-knowledge self-hostable sync engine, the optional cloud control plane that never touches vault content, and the public site and docs.',
+      'Running the org AI-natively from day one — spec-driven development, agentic workflows and subagent orchestration as the default way of building and shipping.',
+    ],
+    tech: 'TypeScript · Electron · Yjs · Lexical · Block Protocol · CRDTs · Astro · Claude Code',
+  },
+  {
     company: 'Anytype.io',
     role: 'Senior Front-End Engineer & Architect',
     location: 'Berlin',
-    period: 'Apr 2021 — Present',
+    period: 'Apr 2021 — May 2026',
     bullets: [
-      'Founding engineer of an open-source, local-first knowledge-management platform. Built the core front-end codebase from the ground up.',
+      'Founding engineer of an open-source, local-first knowledge-management platform. Built the core front-end codebase from the ground up and grew an active open-source contributor community around it.',
+      'Led a ground-up AI-native rewrite of the desktop client (anytype-bun) as a mostly-solo effort — Electron to Tauri v2, contentEditable to Lexical, Sass to Tailwind v4, webpack to Vite and Bun, google-protobuf to ts-proto. Specs as the primary artifact, subagents for parallel research, every diff reviewed.',
       'Shipped a block-based rich-text editor with 20+ block types, a relational database UI with seven view types, an interactive D3 knowledge graph, real-time collaborative chat, notifications, and a Chrome extension.',
       'Architected the front-end data layer: reactive MobX stores consuming a gRPC event stream, with local caching, optimistic updates and conflict resolution.',
       'Designed and shipped the internal product analytics system that directly informed roadmap prioritization.',
@@ -76,32 +91,57 @@ export type WorkEntry = {
   title: string;
   blurb: string;
   context: string;
+  href?: string;
+  hrefLabel?: string;
+  /** Render the app-glyph strip under the blurb (Brainstorm's twenty apps). */
+  apps?: boolean;
 };
 
 export const selectedWork: WorkEntry[] = [
   {
+    title: 'Brainstorm — a desktop OS for you and your AI',
+    blurb:
+      'Local-first knowledge product modeled as a desktop: a wallpaper, icons, windows, and twenty sandboxed apps — Notes, Database, Graph, Calendar, Mailbox, Agent — all reading and writing one typed object space in a folder on your disk. Every app and every AI call crosses a capability broker that checks a per-vault ledger of grants and fails closed. Electron shell, Yjs CRDTs, Block Protocol, SQLite, Rust native modules. Signed and notarized builds for macOS, Windows and Linux.',
+    context: 'Brainstorm, 2026 — present',
+    href: 'https://getbrainstorm.online',
+    hrefLabel: 'getbrainstorm.online',
+    apps: true,
+  },
+  {
+    title: 'Brainstorm agent harness',
+    blurb:
+      'The rig I build Brainstorm with. Agents drive real headless shells through Playwright — dogfood sessions that use the product and file their own friction log, multi-shell runs that exercise collaboration between instances, a dev MCP server for tooling, and a scripted pipeline that captures, voices over and renders the promo videos. The harness is a separate repo that treats the product as its subject.',
+    context: 'Brainstorm, 2026 — present',
+  },
+  {
     title: 'Anytype desktop client',
     blurb:
       'Founding front-end engineer. Built the client from scratch — open source, local-first, cross-platform across macOS, Windows and Linux. The features below are part of it.',
-    context: 'Anytype, 2021 — present',
+    context: 'Anytype, 2021 — 2026',
+  },
+  {
+    title: 'Anytype — AI-native rewrite',
+    blurb:
+      'Ground-up rewrite of the desktop client, executed mostly solo through spec-driven development with Claude Code. Electron to Tauri v2, a custom contentEditable editor to Lexical, Sass to Tailwind v4, webpack to Vite and Bun, google-protobuf to ts-proto over gRPC streaming, and a new cross-platform bundler pipeline. It changed my sense of what one senior engineer can realistically own.',
+    context: 'Anytype, 2025 — 2026',
   },
   {
     title: 'Block-based editor',
     blurb:
       'Rich-text editor with twenty-plus block types — text, headings, lists, tables, code, embeds, callouts, toggles, files, columns. Drag-and-drop reordering, slash commands, keyboard-first navigation.',
-    context: 'Anytype, 2021 — present',
+    context: 'Anytype, 2021 — 2026',
   },
   {
     title: 'Relational database UI',
     blurb:
       'Database surfaces with seven view types — grid, list, gallery, board, calendar, graph, timeline. Filters, sorts, grouping, row templates. The same dataset rendered through any view, kept in sync as filters change.',
-    context: 'Anytype, 2021 — present',
+    context: 'Anytype, 2021 — 2026',
   },
   {
     title: 'Interactive knowledge graph',
     blurb:
       'Force-directed visualization of every object and relation in a workspace. Custom layout over D3, reactive MobX stores, updates streamed from the local database. Pan, zoom, search, filter.',
-    context: 'Anytype, 2021 — present',
+    context: 'Anytype, 2021 — 2026',
   },
   {
     title: 'Real-time collaborative chat',
@@ -113,7 +153,7 @@ export const selectedWork: WorkEntry[] = [
     title: 'Cross-platform release pipeline',
     blurb:
       'Packaging, code signing and notarization for macOS, Windows and Linux across both Electron and Tauri. Auto-update, crash reporting, channels for nightly and stable builds.',
-    context: 'Anytype, 2021 — present',
+    context: 'Anytype, 2021 — 2026',
   },
   {
     title: 'devtodev — platform redesign',
