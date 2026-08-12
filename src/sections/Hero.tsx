@@ -18,6 +18,18 @@ export function Hero() {
 
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/85" />
 
+      {/* Darkens the plate behind the name rather than shadowing the type.
+          A blur large enough to carry 9rem text over the lit side of the form
+          reads as a halo; a feathered scrim is invisible as an effect and
+          leaves the letterforms crisp. */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(120% 75% at 8% 88%, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.75) 32%, rgba(0,0,0,0.35) 55%, transparent 74%)',
+        }}
+      />
+
       <CornerMarks />
       <FloatingAccents id="hero" />
 
@@ -31,7 +43,7 @@ export function Hero() {
             <HeroAccent />
           </div>
           <h1
-            className="hero-title text-5xl font-medium leading-[0.9] text-paper md:text-7xl lg:text-[9rem]"
+            className="text-5xl font-medium leading-[0.9] text-paper md:text-7xl lg:text-[9rem]"
             style={{ letterSpacing: 'var(--tracking-hero)' }}
             data-parallax="0.32"
           >
