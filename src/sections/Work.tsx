@@ -34,18 +34,25 @@ export function Work() {
         {selectedWork.map((w, i) => (
           <article
             key={w.title}
-            className="group grid grid-cols-1 gap-3 bg-black p-6 transition hover:bg-ink-2 md:grid-cols-[60px_1fr_auto] md:items-baseline md:gap-12 md:p-10"
+            className="group grid grid-cols-1 gap-3 bg-black p-6 transition hover:bg-ink-2 md:grid-cols-[60px_1fr] md:gap-x-12 md:p-10"
           >
-            {/* On phones the 40px index column left the text ~226px wide and
-                every title wrapped to three lines, so the whole entry stacks
-                instead. */}
-            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1">
+            {/* Two columns, not three. A third `auto` column for the context
+                reserved its full width down the whole row — squeezing the
+                blurb into a narrow ribbon while leaving a tall empty void
+                beside every entry. The context now shares a baseline with the
+                title, so the text gets the width back. */}
+            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog-1 md:pt-1.5">
               {String(i + 1).padStart(2, '0')}
             </div>
             <div>
-              <h3 className="text-2xl font-medium tracking-tight text-paper md:text-3xl">
-                {w.title}
-              </h3>
+              <div className="flex flex-col gap-1.5 md:flex-row md:items-baseline md:justify-between md:gap-8">
+                <h3 className="text-2xl font-medium tracking-tight text-paper md:text-3xl">
+                  {w.title}
+                </h3>
+                <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.3em] text-fog-2">
+                  {w.context}
+                </span>
+              </div>
               <p className="mt-4 max-w-2xl leading-relaxed text-fog-3">{w.blurb}</p>
               {w.apps && <AppIconStrip className="mt-6" seed={w.title} />}
               {/*
@@ -67,9 +74,6 @@ export function Work() {
                   <span aria-hidden="true">↗</span>
                 </a>
               )}
-            </div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog-2">
-              {w.context}
             </div>
           </article>
         ))}
