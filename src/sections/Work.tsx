@@ -48,11 +48,19 @@ export function Work() {
               </h3>
               <p className="mt-4 max-w-2xl leading-relaxed text-fog-3">{w.blurb}</p>
               {w.apps && <AppIconStrip className="mt-6" seed={w.title} />}
+              {/*
+                Dofollow — there is no rel="nofollow" here and never was, so
+                crawlers already pass the link along. What changed is
+                `noreferrer` dropping to `noopener`: noreferrer was stripping
+                the Referer header, so the destination could not see the
+                traffic as coming from this site. noopener keeps the
+                window.opener guard without hiding the referral.
+              */}
               {w.href && (
                 <a
                   href={w.href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener"
                   className="mt-5 inline-flex items-center gap-2 border-b border-white/25 pb-0.5 font-mono text-[11px] uppercase tracking-[0.2em] text-fog-2 transition hover:border-white/60 hover:text-paper"
                 >
                   {w.hrefLabel ?? w.href}
