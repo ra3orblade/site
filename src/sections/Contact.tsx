@@ -60,7 +60,7 @@ export function Contact() {
 
         <h2 className="text-4xl font-medium leading-[1.05] tracking-tight text-paper md:text-7xl lg:text-8xl">
           <GlitchText>
-            Let&rsquo;s <span className="serif">build</span> something.
+            Tell me what you&rsquo;re <span className="serif">building</span>.
           </GlitchText>
         </h2>
 

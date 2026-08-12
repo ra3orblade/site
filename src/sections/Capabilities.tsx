@@ -30,7 +30,7 @@ export function Capabilities() {
             How I work
           </div>
           <h2 className="text-4xl font-medium leading-[1.05] tracking-tight text-paper md:text-6xl lg:text-7xl">
-            <GlitchText text="AI-native, end to end." />
+            <GlitchText text="Specs, not prompts." />
           </h2>
         </header>
 

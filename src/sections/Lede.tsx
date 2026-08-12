@@ -15,26 +15,28 @@ export function Lede() {
           className="text-3xl font-medium leading-[1.15] tracking-tight text-paper md:text-5xl lg:text-6xl"
           data-reveal
         >
-          I <span className="serif">build</span> production front-ends —{' '}
-          <span className="serif">AI-natively</span>, every day.
+          I <span className="serif">build</span> production front-ends. Lately, more by{' '}
+          <span className="serif">specifying</span> them than typing them.
         </p>
         <p
           className="mt-8 max-w-2xl text-lg leading-relaxed text-fog-3 md:text-xl"
           data-reveal
           style={{ ['--reveal-delay' as string]: '100ms' }}
         >
-          Claude Code is my primary tool. Specs, not prompts. Subagents in parallel.
-          Custom skills and hooks for the work I run weekly. The way I build now is{' '}
-          <span className="serif">not</span> the way I built two years ago.
+          That is not a figure of speech. The Anytype desktop client was rebuilt end
+          to end that way — Electron to Tauri, contentEditable to Lexical, webpack to
+          Vite — <span className="serif">mostly solo</span>, against specs I wrote and
+          diffs I reviewed.
         </p>
         <p
           className="mt-6 max-w-2xl text-lg leading-relaxed text-fog-2 md:text-xl"
           data-reveal
           style={{ ['--reveal-delay' as string]: '180ms' }}
         >
-          Fifteen years of production web work before that. Founding engineer at
-          Anytype, where I architected the front-end of an open-source, local-first
-          knowledge platform now used by thousands of people.
+          Now I&rsquo;m building Brainstorm — a local-first knowledge OS where every
+          app and every AI call reaches your data through a capability ledger, or not
+          at all. Fifteen years of production work behind that — Anytype, devtodev,
+          Game Insight.
         </p>
 
         <figure

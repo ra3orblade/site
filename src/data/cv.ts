@@ -176,23 +176,22 @@ export const aiPractice = {
   eyebrow: 'Primary practice',
   title: 'Building with AI agents.',
   body:
-    'Claude Code is my primary development tool. Tasks start as written specs, not prompts. Subagents run in parallel for research, refactoring and review. Custom skills and hooks turn workflows I run weekly into single-command operations. Large-scale migrations — full MobX-React-Lite conversion, a complete build-system swap — are framed as specs the model executes against, not sequences of hand-written edits.',
-  tail:
-    'The way I build now is not the way I built two years ago — and the gap is widening fast.',
+    'The spec is the unit of work: written first, reviewed like code, executed against. Subagents take research and isolated changes in parallel. Skills and hooks collapse the workflows I repeat weekly into one command. The awkward migrations went the same way — jQuery pulled out of the codebase, a full MobX-React-Lite conversion, rspack swapped for Vite and Bun — each one a spec the model worked through rather than a run of hand edits.',
+  tail: 'It changed my sense of how much one engineer can own.',
 } as const;
 
 export const capabilities: Capability[] = [
   {
     title: 'Front-end architecture',
-    body: 'Component systems, state machines, design tokens. Foundations a team can build on for years — not a stack of features, a system that compounds.',
+    body: 'Component systems, state machines, design tokens. Twenty-plus block types and seven database views sharing one object model — an architecture is only worth the name if it still holds at that count.',
   },
   {
     title: 'Real-time data layers',
-    body: 'Reactive stores over gRPC streams. Optimistic updates, local caching, conflict resolution. The client-side contract with backend, kept stable as the middleware evolves.',
+    body: 'Reactive MobX stores over a gRPC event stream. Optimistic updates, local caching, conflict resolution — and a client-side contract that stays put while the middleware underneath keeps moving.',
   },
   {
     title: 'Cross-platform desktop',
-    body: 'Tauri v2 with Rust shells, Electron when it fits. Code signing, Apple notarization, native installers for macOS, Windows and Linux — the whole release pipeline.',
+    body: 'Tauri v2 with a Rust shell, Electron where it fits. Code signing, Apple notarization, installers for macOS, Windows and Linux — the release pipeline, not just the build.',
   },
 ];
 
