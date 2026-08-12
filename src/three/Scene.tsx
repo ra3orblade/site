@@ -60,6 +60,7 @@ export default function Scene() {
   const [mobile, setMobile] = useState(false);
   const [dpr, setDpr] = useState(1);
   const [inView, setInView] = useState(true);
+  const [noGl, setNoGl] = useState(false);
 
   // The hero is a full-viewport WebGL scene. Without this it keeps drawing at
   // full rate while the reader is metres down the page, alongside the two
@@ -89,7 +90,33 @@ export default function Scene() {
     return () => mq.removeEventListener('change', handler);
   }, []);
 
-  if (reduced) {
+  // Phones are where WebGL actually falls over — a device can refuse a context
+  // outright, or lose it later under memory pressure with three canvases on
+  // the page. Either way the hero would be a black rectangle, so fall back to
+  // a still of the same form.
+  useEffect(() => {
+    try {
+      const probe = document.createElement('canvas');
+      const gl =
+        probe.getContext('webgl2') ||
+        probe.getContext('webgl') ||
+        probe.getContext('experimental-webgl');
+      if (!gl) setNoGl(true);
+    } catch {
+      setNoGl(true);
+    }
+  }, []);
+
+  const poster = (
+    <img
+      src="/hero-poster.jpg"
+      alt=""
+      aria-hidden
+      className="h-full w-full object-cover opacity-90"
+    />
+  );
+
+  if (reduced || noGl) {
     return (
       <div
         ref={ref}
@@ -98,7 +125,9 @@ export default function Scene() {
           background:
             'radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 60%), #000',
         }}
-      />
+      >
+        {noGl && poster}
+      </div>
     );
   }
 
@@ -115,6 +144,12 @@ export default function Scene() {
         shadows={!mobile}
         camera={{ position: [0, 0.15, 4.6], fov: 38, near: 0.1, far: 30 }}
         onCreated={({ gl, scene }) => {
+          // A lost context never comes back on its own here; swap to the still
+          // rather than leaving a dead black canvas in the hero.
+          gl.domElement.addEventListener('webglcontextlost', (e) => {
+            e.preventDefault();
+            setNoGl(true);
+          });
           gl.setClearColor('#000000', 1);
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.05;

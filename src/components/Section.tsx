@@ -16,7 +16,7 @@ export function Section({ id, eyebrow, title, children, className = '' }: Props)
   return (
     <section
       id={id}
-      className={`relative px-5 py-6 md:px-12 md:py-6 lg:px-20 lg:py-6 ${className}`}
+      className={`relative px-6 py-6 md:px-12 md:py-6 lg:px-20 lg:py-6 ${className}`}
     >
       <CornerMarks />
       <FloatingAccents id={id} />

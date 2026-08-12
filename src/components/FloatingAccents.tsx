@@ -30,6 +30,27 @@ const NARROW_POSITIONS = [
   'left-0.5 top-[92%]',
 ];
 
+/**
+ * The hero is a full-viewport section with no reading column — the type sits
+ * in the lower left and the 3D form holds the middle. That leaves the whole
+ * upper band and both flanks free, so it gets a wider scatter than a content
+ * section can take.
+ */
+const HERO_POSITIONS = [
+  'left-[4%] top-[12%]',
+  'left-[12%] top-[30%]',
+  'left-[6%] top-[52%]',
+  'left-[22%] top-[8%]',
+  'left-[38%] top-[17%]',
+  'right-[30%] top-[9%]',
+  'right-[16%] top-[24%]',
+  'right-[5%] top-[14%]',
+  'right-[9%] top-[44%]',
+  'right-[4%] top-[63%]',
+  'right-[19%] top-[74%]',
+  'left-[3%] top-[76%]',
+];
+
 const WIDE_SIZES = [28, 34, 40, 46, 54];
 const NARROW_SIZES = [18, 20, 24, 28];
 
@@ -55,7 +76,7 @@ function deal<T>(items: T[], key: string, count: number): T[] {
   return Array.from({ length: count }, (_, i) => deck[i % deck.length]);
 }
 
-export function FloatingAccents({ id }: { id: string }) {
+export function FloatingAccents({ id, dense = false }: { id: string; dense?: boolean }) {
   /*
    * Index off a string hash per slot rather than arithmetic on a single seed.
    * The previous form was `(base + i*37) * 7 + i*13` mod 12, which reduces to
@@ -75,7 +96,7 @@ export function FloatingAccents({ id }: { id: string }) {
   return (
     <>
       <div className="pointer-events-none absolute inset-0 z-0 hidden lg:block" aria-hidden>
-        {render(WIDE_POSITIONS, WIDE_SIZES, ':wide:')}
+        {render(dense ? HERO_POSITIONS : WIDE_POSITIONS, WIDE_SIZES, ':wide:')}
       </div>
       <div className="pointer-events-none absolute inset-0 z-0 lg:hidden" aria-hidden>
         {render(NARROW_POSITIONS, NARROW_SIZES, ':narrow:')}

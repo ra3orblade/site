@@ -111,9 +111,7 @@ body {
  * they were never firing.
  */
 .glitch-geo,
-.glitch-geo *,
-.hero-accent-shape,
-.hero-accent-shape * {
+.glitch-geo * {
   vector-effect: non-scaling-stroke;
 }
 
@@ -135,48 +133,6 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .glitch-geo {
     opacity: 0.4;
-  }
-}
-
-/* The hero mark is part of the fixed composition, so it stays visible and the
-   scheduler only tears it — it never drops to nothing. */
-.hero-accent-shape {
-  opacity: 0.85;
-}
-
-.is-glitching .hero-accent-shape {
-  animation: hero-accent-tear 0.8s steps(1, end) 1;
-}
-
-@keyframes hero-accent-tear {
-  0%,
-  100% {
-    transform: translate(0, 0) skewX(0deg);
-    opacity: 0.85;
-  }
-  8% {
-    transform: translate(2px, -1px) skewX(6deg);
-    opacity: 1;
-  }
-  16% {
-    transform: translate(-3px, 1px) skewX(-5deg);
-    opacity: 0.3;
-  }
-  24% {
-    transform: translate(2px, 1px) skewX(3deg);
-    opacity: 1;
-  }
-  34% {
-    transform: translate(0, 0) skewX(0deg);
-    opacity: 0.7;
-  }
-  72% {
-    transform: translate(-2px, 0) skewX(-4deg);
-    opacity: 1;
-  }
-  80% {
-    transform: translate(1px, 1px) skewX(2deg);
-    opacity: 0.35;
   }
 }
 

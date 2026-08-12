@@ -6,7 +6,7 @@ export function Lede() {
   return (
     <section
       id="lede"
-      className="relative px-5 py-6 md:px-12 md:py-6 lg:px-20 lg:py-6"
+      className="relative px-6 py-6 md:px-12 md:py-6 lg:px-20 lg:py-6"
     >
       <CornerMarks />
       <FloatingAccents id="lede" />
