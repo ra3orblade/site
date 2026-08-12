@@ -30,8 +30,8 @@ const NARROW_POSITIONS = [
   'left-0.5 top-[92%]',
 ];
 
-const WIDE_SIZES = [20, 26, 32, 38, 44];
-const NARROW_SIZES = [14, 16, 18, 20];
+const WIDE_SIZES = [28, 34, 40, 46, 54];
+const NARROW_SIZES = [18, 20, 24, 28];
 
 /**
  * Wireframe glyphs scattered through a section. Which shape lands where is

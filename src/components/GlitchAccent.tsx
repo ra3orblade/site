@@ -124,6 +124,10 @@ export function GlitchAccent({ shape = 'ico', size = 32, className = '', style }
 
   return (
     <span ref={ref} className={`glitch-accent ${className}`} style={style} aria-hidden>
+      {/* non-scaling-stroke is load-bearing: the viewBox is 44 units wide but
+          renders at ~20-44px, so a unit-relative stroke of 0.7 came out around
+          0.35 CSS px and antialiased away to nothing. This pins it to 1 real
+          pixel at every size. */}
       <svg
         className="glitch-geo"
         width={size}
@@ -131,7 +135,8 @@ export function GlitchAccent({ shape = 'ico', size = 32, className = '', style }
         viewBox="0 0 44 44"
         fill="none"
         stroke="currentColor"
-        strokeWidth="0.7"
+        strokeWidth="1"
+        vectorEffect="non-scaling-stroke"
         strokeLinecap="round"
         strokeLinejoin="round"
       >

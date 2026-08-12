@@ -100,7 +100,21 @@ body {
   position: absolute;
   line-height: 0;
   pointer-events: none;
-  color: var(--color-fog-2);
+  color: var(--color-fog-3);
+}
+
+/*
+ * `vector-effect` is not an inherited property, so setting it on the <svg>
+ * does nothing for the shapes inside — it has to be applied to the children.
+ * Without this the 44-unit viewBox scaled to ~22px rendered sub-pixel strokes
+ * that antialiased down to invisible, which is why the accents looked like
+ * they were never firing.
+ */
+.glitch-geo,
+.glitch-geo *,
+.hero-accent-shape,
+.hero-accent-shape * {
+  vector-effect: non-scaling-stroke;
 }
 
 /*

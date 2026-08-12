@@ -28,7 +28,7 @@ export function HeroAccent() {
         viewBox="0 0 44 44"
         fill="none"
         stroke="currentColor"
-        strokeWidth="0.7"
+        strokeWidth="1"
         strokeLinecap="round"
         strokeLinejoin="round"
       >

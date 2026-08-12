@@ -34,16 +34,34 @@ function flash(el: HTMLElement) {
   window.setTimeout(() => el.classList.remove('is-glitching'), FLASH_MS);
 }
 
-function pick(): HTMLElement | undefined {
-  let total = 0;
-  for (const w of nodes.values()) total += w;
-  if (!total) return undefined;
-  let r = Math.random() * total;
+/**
+ * Only consider what the reader can actually see. With every accent on the
+ * page in one pool, the large majority of picks landed on nodes scrolled far
+ * out of view, so an on-screen flash happened rarely enough to read as
+ * nothing happening at all. Restricting to the viewport concentrates the same
+ * cadence where it can be noticed.
+ */
+function visibleNodes(): Array<[HTMLElement, number]> {
+  const h = window.innerHeight || 0;
+  const out: Array<[HTMLElement, number]> = [];
   for (const [el, w] of nodes) {
+    const r = el.getBoundingClientRect();
+    if (r.bottom > -40 && r.top < h + 40 && r.width > 0) out.push([el, w]);
+  }
+  return out;
+}
+
+function pick(): HTMLElement | undefined {
+  const pool = visibleNodes();
+  if (!pool.length) return undefined;
+  let total = 0;
+  for (const [, w] of pool) total += w;
+  let r = Math.random() * total;
+  for (const [el, w] of pool) {
     r -= w;
     if (r <= 0) return el;
   }
-  return undefined;
+  return pool[pool.length - 1][0];
 }
 
 function tick() {
