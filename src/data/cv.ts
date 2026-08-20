@@ -215,3 +215,33 @@ export const stack = [
   'MongoDB',
   'Claude Code',
 ] as const;
+
+export type OpenSourceProject = {
+  name: string;
+  tagline: string;
+  blurb: string;
+  href: string;
+  license: string;
+  tech: string;
+};
+
+export const openSource: OpenSourceProject[] = [
+  {
+    name: 'swarm',
+    tagline: 'Local-first control plane for AI-agent development',
+    blurb:
+      'Point it at any folder and it watches every Claude Code session on the machine — live tool calls, reasoning, token spend, cost — keeps a ledger of who holds which task, worktree and runtime resource, and streams it all to one dashboard. Zero instrumentation: it reads Claude Code’s own hooks and transcripts. No account, no telemetry, works offline.',
+    href: 'https://github.com/ra3orblade/swarm',
+    license: 'Apache-2.0',
+    tech: 'TypeScript · Bun · SQLite · SSE · MCP',
+  },
+  {
+    name: 'fancy-menus',
+    tagline: 'Declarative, accessible React menu library',
+    blurb:
+      'Dropdowns, context menus, command palettes and popovers authored as typed config objects. The runtime handles positioning, keyboard navigation, virtualization, drag-reorder, sub-menu stacking, persistence and theming — headless, so the chrome is yours.',
+    href: 'https://github.com/ra3orblade/fancy-menus',
+    license: 'MIT',
+    tech: 'React · TypeScript · Floating UI · TanStack Virtual · dnd-kit',
+  },
+];
