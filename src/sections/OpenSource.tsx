@@ -29,15 +29,20 @@ export function OpenSource() {
               <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-fog-1">
                 {p.tech}
               </p>
-              <a
-                href={p.href}
-                target="_blank"
-                rel="noopener"
-                className="mt-5 inline-flex items-center gap-2 border-b border-white/25 pb-0.5 font-mono text-[11px] uppercase tracking-[0.2em] text-fog-2 transition hover:border-white/60 hover:text-paper"
-              >
-                {p.href.replace('https://', '')}
-                <span aria-hidden="true">↗</span>
-              </a>
+              <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+                {[p.website, p.href].filter((u): u is string => Boolean(u)).map((u) => (
+                  <a
+                    key={u}
+                    href={u}
+                    target="_blank"
+                    rel="noopener"
+                    className="inline-flex items-center gap-2 border-b border-white/25 pb-0.5 font-mono text-[11px] uppercase tracking-[0.2em] text-fog-2 transition hover:border-white/60 hover:text-paper"
+                  >
+                    {u.replace('https://', '')}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                ))}
+              </div>
             </div>
           </li>
         ))}

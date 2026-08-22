@@ -221,6 +221,7 @@ export type OpenSourceProject = {
   tagline: string;
   blurb: string;
   href: string;
+  website?: string;
   license: string;
   tech: string;
 };
@@ -232,6 +233,7 @@ export const openSource: OpenSourceProject[] = [
     blurb:
       'Point it at any folder and it watches every Claude Code session on the machine — live tool calls, reasoning, token spend, cost — keeps a ledger of who holds which task, worktree and runtime resource, and streams it all to one dashboard. Zero instrumentation: it reads Claude Code’s own hooks and transcripts. No account, no telemetry, works offline.',
     href: 'https://github.com/ra3orblade/swarm',
+    website: 'https://getswarm.vercel.app',
     license: 'Apache-2.0',
     tech: 'TypeScript · Bun · SQLite · SSE · MCP',
   },
